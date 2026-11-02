@@ -1,6 +1,6 @@
 /* PPL Coach service worker: mở app khi không có mạng.
    Đổi VERSION mỗi lần cập nhật để điện thoại tải bản mới. */
-const VERSION = "ppl-coach-v2";
+const VERSION = "ppl-coach-v3";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 const CDN = /(^|\.)cdn\.jsdelivr\.net$|^fonts\.googleapis\.com$|^fonts\.gstatic\.com$/;
 

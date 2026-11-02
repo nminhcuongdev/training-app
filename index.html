@@ -164,6 +164,29 @@ details.guide[open] summary::after{content:"–"}
 .restin.go{background:var(--ok);color:#fff}
 .restin.go .pb i{background:#fff}
 
+/* timers + pacer */
+.timers{display:grid;gap:8px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
+.trow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.trow b{display:block;font-size:.88rem}.trow small{font-size:.74rem;color:var(--muted)}
+.trow .link{padding:0;font-size:inherit}
+.mini{display:grid;grid-template-columns:38px 70px 38px;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;height:38px;flex:none;background:var(--surface)}
+.mini button{border:0;background:var(--surface-2);height:100%;font-family:var(--f-mono);font-size:1rem}
+.mini output{text-align:center;font-family:var(--f-mono);font-size:.86rem;white-space:nowrap}
+.host{scroll-margin-top:calc(64px + env(safe-area-inset-top,0px))}
+.pacer{position:fixed;left:0;right:0;bottom:calc(60px + env(safe-area-inset-bottom,0px));z-index:27;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+.pin{max-width:760px;margin:0 auto 8px;background:var(--timer-bg);color:var(--timer-ink);border-radius:16px;padding:12px 14px;display:grid;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.ptop{display:flex;justify-content:space-between;gap:8px;font-size:.78rem;opacity:.8;min-width:0}
+.ptop span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pmid{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.prep{font-family:var(--f-display);font-size:2rem;font-weight:800;line-height:1;text-transform:uppercase}
+.pph{font-size:.92rem;font-weight:600;margin-top:4px}
+.pcd{font-size:3.4rem;font-weight:700;line-height:1;min-width:2.2ch;text-align:right}
+.pacer .pb{height:6px;border-radius:3px;background:rgba(127,127,127,.3);overflow:hidden}
+.pacer .pb i{display:block;height:100%;width:0}
+.pbts{display:grid;grid-template-columns:1fr 1fr 48px;gap:6px}
+.pbts button{border:1px solid currentColor;background:transparent;color:inherit;border-radius:10px;padding:12px 8px;font-weight:600;font-size:.9rem}
+.pbts button.ok{background:#1F8A5B;border-color:#1F8A5B;color:#fff}
+
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:26;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
 .tabbar div{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
@@ -239,6 +262,14 @@ textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:
   </main>
 </div>
 
+<div class="pacer" id="pacer" hidden role="timer" aria-live="off">
+  <div class="pin">
+    <div class="ptop"><span id="pTitle">Hiệp 1</span><span id="pW" class="mono"></span></div>
+    <div class="pmid"><div><div class="prep" id="pRep">8 rep</div><div class="pph" id="pPh">Chuẩn bị</div></div><div class="pcd mono" id="pCd">3</div></div>
+    <div class="pb"><i id="pBar"></i></div>
+    <div class="pbts"><button id="pPause">❚❚ Tạm dừng</button><button id="pMore" hidden>+1 rep</button><button id="pLog" class="ok">✓ Ghi hiệp</button><button id="pX" aria-label="Huỷ đếm nhịp">✕</button></div>
+  </div>
+</div>
 <div class="restbar" id="restbar" hidden>
   <div class="restin" id="restin">
     <div><div class="lab" id="restLab">Nghỉ giữa hiệp</div><div class="tm" id="restT">0:00</div></div>
@@ -1106,7 +1137,7 @@ const endDrag=()=>{drag=null;}; cv.addEventListener("pointerup",endDrag); cv.add
 /* ---------- player ---------- */
 const st={err:-1,t:0,playing:!reduce,speed:1,rep:1,lastPhase:-1,visible:false};
 const cur={ex:null,id:null,A:null,B:null,M:null,tempo:null};
-let blendFrom=null, blendT=1, lastPose=null, host=null;
+let blendFrom=null, blendT=1, lastPose=null, host=null, drive=null;
 function ease(u){ u=Math.min(1,Math.max(0,u)); return 0.5-0.5*Math.cos(Math.PI*u); }
 function prepPose(){
   const ex=cur.ex, er=st.err>=0?ex.errors[st.err]:null;
@@ -1144,12 +1175,14 @@ function highlight(c){
 }
 function hideMarks(){ marks.forEach(m=>m.visible=false); }
 function load(id){
+  drive=null;
   cur.ex=EX[id]; cur.id=id; st.err=-1; st.t=0; st.rep=1; st.lastPhase=-1;
   buildProps(cur.ex); prepPose(); applyPreset("q");
   blendFrom=null; blendT=1; lastPose=null; hideMarks();
   hooks.change&&hooks.change();
 }
 function setErr(i){
+  drive=null;
   if(!cur.ex) return;
   if(lastPose){ blendFrom=lastPose; blendT=0; }
   st.err=i; st.t=0; st.rep=1; st.lastPhase=-1; prepPose(); hideMarks();
@@ -1163,7 +1196,8 @@ let last=performance.now();
 function frame(now){
   const dt=Math.min(0.05,(now-last)/1000); last=now;
   if(cur.ex && host && host.isConnected && st.visible && document.visibilityState!=="hidden"){
-    if(st.playing){ const tot=phaseInfo(st.t).tot; const pc=Math.floor(st.t/tot); st.t+=dt*st.speed; if(Math.floor(st.t/tot)>pc) st.rep++; }
+    if(drive&&drive.id===cur.id){ st.t=drive.fn(); }
+    else if(st.playing){ const tot=phaseInfo(st.t).tot; const pc=Math.floor(st.t/tot); st.t+=dt*st.speed; if(Math.floor(st.t/tot)>pc) st.rep++; }
     const info=phaseInfo(st.t);
     let pose=poseAt(info.p);
     if(blendFrom && blendT<1){ blendT=Math.min(1,blendT+dt/0.5); pose=mixPose(blendFrom,pose,ease(blendT)); if(blendT>=1) blendFrom=null; }
@@ -1182,6 +1216,8 @@ requestAnimationFrame(frame);
 return {
   load, setErr, attach, phaseName, preset:applyPreset,
   toggle(){ st.playing=!st.playing; return st.playing; },
+  pace(id,tp,fn){ if(cur.id!==id) load(id); if(st.err!==-1) setErr(-1); cur.tempo=tp; st.t=0; st.lastPhase=-1; drive={id,fn}; },
+  unpace(){ if(!drive) return; drive=null; if(cur.ex){ prepPose(); st.t=0; st.lastPhase=-1; } },
   get playing(){ return st.playing; }, get err(){ return st.err; }, get id(){ return cur.id; },
   debug:{st,cur,applyPose,poseAt,phaseInfo,rig,updaters:()=>updaters,render(){ updaters.forEach(f=>f()); setCam(1); renderer.render(scene,camera); },
     ikErr(){ return {hands:[rig.arm[1].err,rig.arm[-1].err],feet:[rig.leg[1].err,rig.leg[-1].err]}; },
@@ -1195,7 +1231,8 @@ let demo=null;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const KEY="pplcoach.v1";
-const fresh=()=>({v:1,sessions:[],cur:null,prefs:{sound:true,bw:60}});
+const PDEF=()=>({sound:true,bw:60,voice:true,tick:true,rest:{},repRest:{}});
+const fresh=()=>({v:1,sessions:[],cur:null,rest:null,prefs:PDEF()});
 let storeOK=true;
 function loadStore(){
   try{ localStorage.setItem(KEY+".t","1"); localStorage.removeItem(KEY+".t");
@@ -1203,7 +1240,7 @@ function loadStore(){
   catch(e){ storeOK=false; }
   return fresh();
 }
-let S=loadStore(); S.prefs=Object.assign({sound:true,bw:60},S.prefs||{});
+let S=loadStore(); S.prefs=Object.assign(PDEF(),S.prefs||{});
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); storeOK=true; }catch(e){ storeOK=false; } }
 
 const nf=new Intl.NumberFormat("vi-VN",{maximumFractionDigits:1});
@@ -1300,11 +1337,11 @@ function releaseLock(){ try{ wl&&wl.release(); }catch(e){} wl=null; }
 
 /* ---------- rest timer ---------- */
 let fired=false;
-function startRest(sec,label){ if(!S.cur) return; S.cur.rest={end:Date.now()+sec*1000,dur:sec,label}; fired=false; save(); tickRest(); }
-function stopRest(){ if(S.cur){ S.cur.rest=null; save(); } $("#restbar").hidden=true; }
+function startRest(sec,label){ S.rest={end:Date.now()+sec*1000,dur:sec,label}; fired=false; unlockAudio(); save(); tickRest(); }
+function stopRest(){ S.rest=null; save(); $("#restbar").hidden=true; }
 function tickRest(){
-  const r=S.cur&&S.cur.rest; const bar=$("#restbar");
-  if(!r){ bar.hidden=true; return; }
+  const r=S.rest; const bar=$("#restbar");
+  if(!r||pacer.on){ bar.hidden=true; return; }
   const rem=(r.end-Date.now())/1000; bar.hidden=false;
   const box=$("#restin");
   if(rem>0){ box.classList.remove("go"); $("#restT").textContent=fmtRest(rem); $("#restLab").textContent=r.label; $("#restP").style.width=(100*(1-rem/r.dur)).toFixed(1)+"%"; }
@@ -1312,17 +1349,106 @@ function tickRest(){
     box.classList.add("go"); $("#restT").textContent="Vào hiệp!"; $("#restLab").textContent=r.label; $("#restP").style.width="100%";
     if(rem<-20) stopRest(); }
 }
-$("#rMinus").onclick=()=>{ if(S.cur&&S.cur.rest){ S.cur.rest.end-=15000; save(); tickRest(); } };
-$("#rPlus").onclick=()=>{ if(S.cur&&S.cur.rest){ const r=S.cur.rest; if(r.end<Date.now()) { r.end=Date.now(); fired=false; } r.end+=15000; r.dur=Math.max(r.dur,(r.end-Date.now())/1000); save(); tickRest(); } };
+$("#rMinus").onclick=()=>{ if(S.rest){ S.rest.end-=15000; save(); tickRest(); } };
+$("#rPlus").onclick=()=>{ if(S.rest){ const r=S.rest; if(r.end<Date.now()) { r.end=Date.now(); fired=false; } r.end+=15000; r.dur=Math.max(r.dur,(r.end-Date.now())/1000); save(); tickRest(); } };
 $("#rSkip").onclick=stopRest;
 function tickClock(){ const c=$("#clock"); if(S.cur){ c.classList.add("on"); $("#clockT").textContent=`${PROG[S.cur.day].ty} · ${fmtClock(Date.now()-S.cur.start)}`; } else { c.classList.remove("on"); $("#clockT").textContent="Chưa bắt đầu"; } }
 $("#clock").addEventListener("click",()=>{ if(S.cur){ ui.day=S.cur.day; location.hash="#today"; renderToday(); } });
 setInterval(()=>{ tickClock(); tickRest(); },250);
 
+/* ---------- thời gian nghỉ tùy chỉnh ---------- */
+const rKey=row=>ui.day+":"+row.id;
+const getRest=row=>{ const v=S.prefs.rest[rKey(row)]; return v!=null?v:row.rest; };
+const getRepRest=row=>{ const v=S.prefs.repRest[rKey(row)]; return v!=null?v:Math.round(EX[row.id].tempo[3]*2)/2; };
+function setRest(row,v){ S.prefs.rest[rKey(row)]=Math.min(600,Math.max(15,v)); save(); }
+function setRepRest(row,v){ S.prefs.repRest[rKey(row)]=Math.min(10,Math.max(0,v)); save(); }
+function timersHTML(row){ const rr=getRepRest(row);
+  return `<div class="trow"><span><b>Nghỉ giữa rep</b><small>dừng ở cuối mỗi rep khi đếm nhịp</small></span><div class="mini"><button data-a="rr-" aria-label="Giảm nghỉ giữa rep">−</button><output>${nf.format(rr)} giây</output><button data-a="rr+" aria-label="Tăng nghỉ giữa rep">+</button></div></div>
+  <div class="trow"><span><b>Nghỉ giữa hiệp</b><small>tự đếm khi bấm ✓ · <button class="link" data-a="restnow">đếm ngay</button></small></span><div class="mini"><button data-a="sr-" aria-label="Giảm nghỉ giữa hiệp">−</button><output>${fmtRest(getRest(row))}</output><button data-a="sr+" aria-label="Tăng nghỉ giữa hiệp">+</button></div></div>`; }
+function paceLabel(day,row){ const sets=setsFor(day,row); const i=sets.findIndex(x=>!x.done); if(i<0) return ""; const x=sets[i]; return `▶ Đếm nhịp hiệp ${i+1} · ${x.r} rep${x.w!==""?" · "+fw(x.w)+" kg":""}`; }
+
+/* ---------- hoàn thành / bỏ đánh dấu một hiệp ---------- */
+function toggleSet(day,row,i){
+  const D=PROG[day];
+  if(S.cur&&S.cur.day!==day){ toast(`Kết thúc buổi ${PROG[S.cur.day].ty} trước đã`); return; }
+  const x=setsFor(day,row)[i];
+  if(!x.done&&(x.w===""||!(+x.r>0))){ toast("Nhập mức tạ và số rep trước"); return; }
+  if(!S.cur) startSession(day);
+  const live=setsFor(day,row); const y=live[i]; y.done=!y.done; y.at=Date.now();
+  if(y.done){
+    const left=live.filter(z=>!z.done).length; const idx=D.ex.indexOf(row);
+    const nextRow=D.ex.slice(idx+1).find(r=>doneCount(day,r)<setsFor(day,r).length);
+    if(left>0) startRest(getRest(row),`Nghỉ giữa hiệp · còn ${left} hiệp ${EX[row.id].name}`);
+    else if(nextRow){ startRest(Math.max(90,getRest(row)),`Xong bài! Tiếp theo: ${EX[nextRow.id].name}`); }
+    else { stopRest(); toast("Xong bài cuối. Bấm Kết thúc buổi tập để lưu."); }
+    unlockAudio();
+    if(left===0&&nextRow){ openEx(nextRow.id,true); save(); return; }
+  }
+  refreshCard(row); save();
+}
+
+/* ---------- đếm nhịp từng rep ---------- */
+const NUMS=["không","một","hai","ba","bốn","năm","sáu","bảy","tám","chín","mười"];
+const numVi=n=>n<=10?NUMS[n]:n<20?"mười "+(n%10===5?"lăm":NUMS[n%10]):String(n);
+function say(t){ if(!S.prefs.voice||!window.speechSynthesis||!window.SpeechSynthesisUtterance) return; try{ const u=new SpeechSynthesisUtterance(t); u.lang="vi-VN"; u.rate=1.05; speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){} }
+function tone(f,d,v){ if(!ac||!S.prefs.sound) return; try{ const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime; o.frequency.value=f; o.connect(g); g.connect(ac.destination); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(v||0.25,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+(d||0.12)); o.start(t); o.stop(t+(d||0.12)+0.03); }catch(e){} }
+const pacer={on:false};
+const pEl=()=>((pacer.pausedAt||Date.now())-pacer.start-pacer.pausedTotal)/1000-pacer.prep;
+function phaseCol(ph,ex){ if(ph===-1) return "#9AA3AE"; if(ph===1) return "#B9C0CA"; if(ph===3) return "#4FC48E"; const ecc=(ph===0)===ex.startEcc; return ecc?"#5B8CFF":"#FF8A3D"; }
+function startPacer(day,row){
+  if(S.cur&&S.cur.day!==day){ toast(`Kết thúc buổi ${PROG[S.cur.day].ty} trước đã`); return; }
+  let sets=setsFor(day,row); let i=sets.findIndex(x=>!x.done);
+  if(i<0){ toast("Bài này đã xong hết hiệp"); return; }
+  if(sets[i].w===""){ toast("Nhập mức tạ cho hiệp này trước"); return; }
+  unlockAudio(); say("Chuẩn bị");
+  if(!S.cur) startSession(day);
+  sets=setsFor(day,row); i=sets.findIndex(x=>!x.done);
+  stopRest();
+  const tp=EX[row.id].tempo, t4=[tp[0],tp[1],tp[2],getRepRest(row)];
+  Object.assign(pacer,{on:true,day,row,i,tp:t4,start:Date.now(),pausedAt:0,pausedTotal:0,prep:3,target:Math.max(1,+sets[i].r||row.lo),reached:false,lastPh:-9,lastSec:-9,lastDone:0});
+  if(ui.open!==row.id) openEx(row.id);
+  const host=document.querySelector(`.exc[data-id="${row.id}"] [data-host]`); if(host) host.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+  if(demo) demo.pace(row.id,t4,()=>Math.max(0,pEl()));
+  lockScreen(); $("#pacer").hidden=false; $("#restbar").hidden=true; tickPacer();
+}
+function closePacer(){ pacer.on=false; $("#pacer").hidden=true; if(demo) demo.unpace(); }
+function tickPacer(){
+  if(!pacer.on) return;
+  const el=pEl(), tp=pacer.tp, tot=tp[0]+tp[1]+tp[2]+tp[3], ex=EX[pacer.row.id];
+  let ph,rem,dur,done;
+  if(el<0){ ph=-1; rem=-el; dur=pacer.prep; done=0; }
+  else { const k=Math.floor(el/tot), x=el-k*tot, ends=[tp[0],tp[0]+tp[1],tp[0]+tp[1]+tp[2],tot]; ph=0; while(ph<3&&x>=ends[ph]) ph++;
+    done=k+(ph===3?1:0); const s0=ph?ends[ph-1]:0; dur=ends[ph]-s0; rem=ends[ph]-x; }
+  const sec=Math.ceil(rem);
+  if(!pacer.reached){
+    if(ph!==pacer.lastPh){ if(ph>=0) tone(ph===1?620:ph===3?440:((ph===0)===ex.startEcc?520:780),0.16,0.3); pacer.lastPh=ph; pacer.lastSec=sec; }
+    else if(sec!==pacer.lastSec){ pacer.lastSec=sec; if(ph===-1) tone(660,0.1,0.3); else if(S.prefs.tick&&dur>=1.5&&sec>0) tone(330,0.05,0.12); }
+    if(done>pacer.lastDone){ pacer.lastDone=done; say(numVi(done));
+      if(done>=pacer.target){ pacer.reached=true; pacer.pausedAt=Date.now(); setTimeout(()=>tone(1175,0.35,0.32),250); } }
+  }
+  const sets=setsFor(pacer.day,pacer.row), w=sets[pacer.i]?sets[pacer.i].w:"";
+  $("#pTitle").textContent=`Hiệp ${pacer.i+1}/${sets.length} · ${ex.name}`; $("#pW").textContent=w===""?"":`${fw(w)} kg`;
+  const n=pacer.lastDone;
+  $("#pRep").textContent=pacer.reached?`Đủ ${n} rep`:ph===-1?`${pacer.target} rep`:ph===3?`Rep ${n} ✓`:`Rep ${n+1}/${pacer.target}`;
+  $("#pPh").textContent=pacer.reached?"Ghi hiệp, hoặc làm thêm nếu còn sức":ph===-1?"Chuẩn bị vào tư thế":ph===3?"Nghỉ giữa rep":phaseName(ph,ex);
+  const col=pacer.reached?"#4FC48E":phaseCol(ph,ex);
+  const cd=$("#pCd"); cd.textContent=pacer.reached?"✓":rem>=1?String(sec):rem.toFixed(1); cd.style.color=col;
+  const bar=$("#pBar"); bar.style.background=col; bar.style.width=pacer.reached?"100%":(100*Math.min(1,1-rem/Math.max(0.001,dur))).toFixed(1)+"%";
+  $("#pPause").hidden=pacer.reached; $("#pMore").hidden=!pacer.reached;
+  $("#pPause").textContent=pacer.pausedAt?"▶ Tiếp tục":"❚❚ Tạm dừng";
+  $("#pLog").textContent=n>0?`✓ Ghi ${n} rep`:"✓ Ghi hiệp";
+}
+$("#pPause").onclick=()=>{ if(!pacer.on||pacer.reached) return; if(pacer.pausedAt){ pacer.pausedTotal+=Date.now()-pacer.pausedAt; pacer.pausedAt=0; } else pacer.pausedAt=Date.now(); tickPacer(); };
+$("#pMore").onclick=()=>{ if(!pacer.on) return; pacer.target++; pacer.reached=false; if(pacer.pausedAt){ pacer.pausedTotal+=Date.now()-pacer.pausedAt; pacer.pausedAt=0; } tickPacer(); };
+$("#pLog").onclick=()=>{ if(!pacer.on) return; const {day,row,i}=pacer, n=pacer.lastDone; closePacer();
+  const x=setsFor(day,row)[i]; if(n>0) x.r=n; if(!x.done) toggleSet(day,row,i); else refreshCard(row); };
+$("#pX").onclick=()=>{ closePacer(); toast("Đã huỷ đếm nhịp, hiệp chưa được ghi"); };
+setInterval(tickPacer,50);
+
 /* ---------- TODAY ---------- */
 function headHTML(day,row,i){
   const ex=EX[row.id], sets=setsFor(day,row), d=sets.filter(x=>x.done).length;
-  return `<span class="n">${pad(i+1)}</span><span><div class="t">${esc(ex.name)}</div><div class="m">${row.sets}×${repTxt(row)} · RIR ${row.rir} · nghỉ ${fmtRest(row.rest)}</div></span><span class="prog" aria-label="${d}/${sets.length} hiệp">${sets.map(x=>`<i class="${x.done?"d":""}"></i>`).join("")}</span>`;
+  return `<span class="n">${pad(i+1)}</span><span><div class="t">${esc(ex.name)}</div><div class="m">${row.sets}×${repTxt(row)} · RIR ${row.rir} · nghỉ ${fmtRest(getRest(row))}</div></span><span class="prog" aria-label="${d}/${sets.length} hiệp">${sets.map(x=>`<i class="${x.done?"d":""}"></i>`).join("")}</span>`;
 }
 function guideHTML(ex){
   return `<details class="guide"><summary>Hướng dẫn kỹ thuật và lỗi sai</summary><div class="gbody">
@@ -1353,6 +1479,8 @@ function bodyHTML(day,row){
     <div class="sug">${g.first?"":`<div>Gợi ý hôm nay: <b class="big">${fw(g.w)} kg × ${g.r}</b> ${g.up?'<span class="up">↑ tăng tạ</span>':""}</div>`}<div>${esc(g.msg)}</div>${g.last?`<div class="warm">Lần trước: <b>${setsTxt(g.last)}</b></div>`:""}</div>
     ${warmup(row,+wNow||+g.w)?`<div class="warm">${warmup(row,+wNow||+g.w)}</div>`:""}
     <div class="sets" data-sets>${setsHTML(day,row)}</div>
+    <div class="timers" data-timers>${timersHTML(row)}</div>
+    <button class="btn block" data-a="pace" data-pace ${paceLabel(day,row)?"":"hidden"}>${paceLabel(day,row)}</button>
     <div class="exf"><button class="link" data-a="add">+ Thêm hiệp</button>${sets.length>1&&!sets[sets.length-1].done?`<button class="link" data-a="del" style="color:var(--muted)">− Bớt hiệp</button>`:""}<span style="flex:1"></span><button class="btn ghost" data-a="next">Bài tiếp ›</button></div>`;
 }
 function renderToday(){
@@ -1395,6 +1523,8 @@ function refreshCard(row){
   const i=PROG[day].ex.indexOf(row); card.querySelector(".exh").innerHTML=headHTML(day,row,i);
   const sets=setsFor(day,row); card.classList.toggle("done",sets.every(x=>x.done));
   const box=card.querySelector("[data-sets]"); if(box) box.innerHTML=setsHTML(day,row);
+  const tb=card.querySelector("[data-timers]"); if(tb) tb.innerHTML=timersHTML(row);
+  const pb=card.querySelector("[data-pace]"); if(pb){ const l=paceLabel(day,row); pb.textContent=l; pb.hidden=!l; }
   const m=document.querySelector(".sess .meta"); if(m){ const D=PROG[day]; const t=D.ex.reduce((a,r)=>a+setsFor(day,r).length,0), d=D.ex.reduce((a,r)=>a+doneCount(day,r),0); m.children[1].innerHTML=`<b>${d}/${t}</b>hiệp`; }
   if(S.cur&&S.cur.day===day) save();
 }
@@ -1413,27 +1543,15 @@ $("#v-today").addEventListener("click",e=>{
   if(a==="finish"){ finishModal(); return; }
   const card=t.closest(".exc"); if(!card) return; const row=D.ex.find(r=>r.id===card.dataset.id); const sets=setsFor(day,row); const i=+t.dataset.i;
   if(a==="toggle"){ ui.open=(ui.open===row.id)?"":row.id; renderToday(); return; }
+  if(a==="rr-"||a==="rr+"){ setRepRest(row,getRepRest(row)+(a==="rr+"?0.5:-0.5)); refreshCard(row); return; }
+  if(a==="sr-"||a==="sr+"){ setRest(row,getRest(row)+(a==="sr+"?15:-15)); refreshCard(row); return; }
+  if(a==="restnow"){ startRest(getRest(row),`Nghỉ giữa hiệp · ${EX[row.id].name}`); return; }
+  if(a==="pace"){ startPacer(day,row); return; }
   const st=stepOf(row.id);
   if(a==="wm"||a==="wp"){ const x=sets[i]; const cv=x.w===""?0:+x.w; x.w=Math.max(0,Math.round((cv+(a==="wp"?st:-st))*100)/100);
     if(!x.done) for(let j=i+1;j<sets.length;j++) if(!sets[j].done) sets[j].w=x.w; refreshCard(row); return; }
   if(a==="rm"||a==="rp"){ sets[i].r=Math.max(0,(+sets[i].r||0)+(a==="rp"?1:-1)); refreshCard(row); return; }
-  if(a==="chk"){
-    if(S.cur&&S.cur.day!==day){ toast(`Kết thúc buổi ${PROG[S.cur.day].ty} trước đã`); return; }
-    const x=sets[i];
-    if(!x.done&&(x.w===""||!(+x.r>0))){ toast("Nhập mức tạ và số rep trước"); return; }
-    if(!S.cur) startSession(day);
-    const live=setsFor(day,row); const y=live[i]; y.done=!y.done; y.at=Date.now();
-    if(y.done){
-      const left=live.filter(z=>!z.done).length; const idx=D.ex.indexOf(row);
-      const nextRow=D.ex.slice(idx+1).find(r=>doneCount(day,r)<setsFor(day,r).length);
-      if(left>0) startRest(row.rest,`Nghỉ · còn ${left} hiệp ${EX[row.id].name}`);
-      else if(nextRow){ startRest(Math.max(90,row.rest),`Xong bài! Tiếp theo: ${EX[nextRow.id].name}`); }
-      else { stopRest(); toast("Xong bài cuối. Bấm Kết thúc buổi tập để lưu."); }
-      unlockAudio();
-      if(left===0&&nextRow){ openEx(nextRow.id,true); save(); return; }
-    }
-    refreshCard(row); save(); return;
-  }
+  if(a==="chk"){ if(pacer.on&&pacer.row===row&&pacer.i===i) closePacer(); toggleSet(day,row,i); return; }
   if(a==="add"){ const l=sets[sets.length-1]; sets.push({w:l?l.w:"",r:l?l.r:row.lo,done:false}); renderToday(); return; }
   if(a==="del"){ if(sets.length>1&&!sets[sets.length-1].done) sets.pop(); renderToday(); return; }
   if(a==="next"){ const idx=D.ex.indexOf(row); const n=D.ex[(idx+1)%D.ex.length]; openEx(n.id,true); return; }
@@ -1482,18 +1600,21 @@ $("#v-progress").addEventListener("click",e=>{ const b=e.target.closest("button[
 /* ---------- DATA ---------- */
 function renderData(){
   $("#v-data").innerHTML=`<div class="vh"><div class="eyebrow">Dữ liệu</div><h2>Lưu trữ & sao lưu</h2><p>Dữ liệu chỉ nằm trong trình duyệt này. Thỉnh thoảng hãy sao chép bản sao lưu và dán vào Ghi chú để không mất khi xoá dữ liệu trình duyệt hoặc đổi máy.</p></div>
-  <div class="card"><h3>Cá nhân</h3><div class="frow"><label class="field" for="pBw">Cân nặng (kg)<input id="pBw" inputmode="decimal" value="${S.prefs.bw}"></label><label class="field" for="pSound">Âm báo hết giờ nghỉ<select id="pSound"><option value="1" ${S.prefs.sound?"selected":""}>Bật</option><option value="0" ${S.prefs.sound?"":"selected"}>Tắt</option></select></label></div>
+  <div class="card"><h3>Cá nhân</h3><div class="frow"><label class="field" for="pBw">Cân nặng (kg)<input id="pBw" inputmode="decimal" value="${S.prefs.bw}"></label><label class="field" for="pSound">Âm báo (hết giờ nghỉ, nhịp rep)<select id="pSound"><option value="1" ${S.prefs.sound?"selected":""}>Bật</option><option value="0" ${S.prefs.sound?"":"selected"}>Tắt</option></select></label></div>
+    <div class="frow"><label class="field" for="pVoice">Đọc số rep bằng giọng nói<select id="pVoice"><option value="1" ${S.prefs.voice?"selected":""}>Bật</option><option value="0" ${S.prefs.voice?"":"selected"}>Tắt</option></select></label><label class="field" for="pTick">Tiếng tích mỗi giây khi đếm nhịp<select id="pTick"><option value="1" ${S.prefs.tick?"selected":""}>Bật</option><option value="0" ${S.prefs.tick?"":"selected"}>Tắt</option></select></label></div>
     <p class="warm">Bộ nhớ trình duyệt: ${storeOK?"đang hoạt động":"<b style='color:var(--err)'>bị chặn, dữ liệu sẽ mất khi đóng trang</b>"} · ${S.sessions.length} buổi đã lưu.</p></div>
   <div class="card"><h3>Sao lưu</h3><textarea id="exp" readonly aria-label="Dữ liệu sao lưu">${esc(JSON.stringify(S))}</textarea><div class="confirm"><button class="btn ghost" id="bCopy">Sao chép</button></div></div>
   <div class="card"><h3>Khôi phục</h3><p>Dán bản sao lưu vào đây. Dữ liệu hiện tại sẽ bị thay thế.</p><textarea id="imp" aria-label="Dán dữ liệu khôi phục" placeholder='{"v":1,"sessions":[...]}'></textarea><div class="confirm" id="impC"><button class="btn ghost" id="bImp">Khôi phục</button></div></div>
   <div class="card"><h3>Xoá toàn bộ</h3><p>Xoá mọi buổi tập và buổi đang dở trên trình duyệt này.</p><div class="confirm" id="rstC"><button class="btn danger" id="bRst">Xoá toàn bộ dữ liệu</button></div></div>`;
   $("#pBw").onchange=e=>{ const v=parseFloat(e.target.value.replace(",",".")); if(v>25&&v<250){ S.prefs.bw=v; save(); toast("Đã lưu cân nặng"); } };
+  $("#pVoice").onchange=e=>{ S.prefs.voice=e.target.value==="1"; save(); if(S.prefs.voice) say("Một, hai, ba"); };
+  $("#pTick").onchange=e=>{ S.prefs.tick=e.target.value==="1"; save(); };
   $("#pSound").onchange=e=>{ S.prefs.sound=e.target.value==="1"; save(); unlockAudio(); if(S.prefs.sound) beep(1); };
   $("#bCopy").onclick=()=>{ const t=$("#exp"); const ok=()=>toast("Đã sao chép bản sao lưu"); try{ navigator.clipboard.writeText(t.value).then(ok,()=>{ t.select(); toast("Đã chọn sẵn, nhấn giữ để sao chép"); }); }catch(e){ t.select(); toast("Đã chọn sẵn, nhấn giữ để sao chép"); } };
   $("#bImp").onclick=()=>{ let o; try{ o=JSON.parse($("#imp").value); }catch(e){ toast("Dữ liệu không đúng định dạng JSON"); return; }
     if(!o||o.v!==1||!Array.isArray(o.sessions)){ toast("Đây không phải bản sao lưu PPL Coach"); return; }
     $("#impC").innerHTML=`<span>Thay ${S.sessions.length} buổi hiện có bằng ${o.sessions.length} buổi từ bản sao lưu?</span><button class="btn" id="iY">Thay thế</button><button class="btn ghost" id="iN">Huỷ</button>`;
-    $("#iY").onclick=()=>{ S=Object.assign(fresh(),o); S.prefs=Object.assign({sound:true,bw:60},o.prefs||{}); save(); toast("Đã khôi phục"); renderData(); tickClock(); };
+    $("#iY").onclick=()=>{ S=Object.assign(fresh(),o); S.prefs=Object.assign(PDEF(),o.prefs||{}); save(); toast("Đã khôi phục"); renderData(); tickClock(); };
     $("#iN").onclick=renderData; };
   $("#bRst").onclick=()=>{ $("#rstC").innerHTML=`<span>Xoá vĩnh viễn ${S.sessions.length} buổi tập?</span><button class="btn danger" id="rY">Xoá</button><button class="btn ghost" id="rN">Huỷ</button>`;
     $("#rY").onclick=()=>{ S=fresh(); save(); for(const k in draft) delete draft[k]; stopRest(); toast("Đã xoá toàn bộ dữ liệu"); renderData(); tickClock(); };

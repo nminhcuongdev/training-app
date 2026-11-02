@@ -12,7 +12,8 @@ Toàn bộ app nằm trong một file `index.html`, không cần cài đặt hay
   - hướng dẫn cơ chế chuyển động, kỹ thuật theo từng pha, cách sửa lỗi;
   - gợi ý mức tạ hôm nay theo phương pháp tăng tải kép, kèm các hiệp khởi động;
   - bảng ghi hiệp (kg, rep, ✓) với nút +/− để chỉnh nhanh.
-- **Đồng hồ**: đếm thời gian buổi tập; tự đếm ngược thời gian nghỉ sau mỗi hiệp (±15 giây, bỏ qua), có âm báo và rung khi hết giờ. Màn hình được giữ sáng trong lúc tập (nếu trình duyệt hỗ trợ).
+- **Đếm nhịp từng rep**: bấm "▶ Đếm nhịp", app đếm 3-2-1 rồi dẫn từng rep theo tempo của bài (hạ / giữ / đẩy / nghỉ giữa rep), có tiếng bíp theo pha, đọc số rep bằng giọng nói và mô hình 3D tập cùng nhịp. Đủ rep thì dừng; bấm "Ghi hiệp" để lưu số rep đã làm.
+- **Đồng hồ**: đếm thời gian buổi tập; tự đếm ngược thời gian nghỉ giữa hiệp sau mỗi hiệp (±15 giây, bỏ qua), có âm báo khi hết giờ. Thời gian nghỉ giữa rep và giữa hiệp chỉnh riêng được cho từng bài. Màn hình được giữ sáng trong lúc tập (nếu trình duyệt hỗ trợ).
 - **Lịch tập**: tổng quan tuần, bấm vào bài để mở trong buổi tương ứng.
 - **Tiến độ**: 1RM ước tính theo từng bài qua các buổi, danh sách buổi đã tập.
 - **Dữ liệu**: lưu trong `localStorage` của trình duyệt; có sao lưu và khôi phục bằng cách sao chép/dán JSON, và xoá toàn bộ.
