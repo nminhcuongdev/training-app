@@ -17,14 +17,37 @@ Toàn bộ app nằm trong một file `index.html`, không cần cài đặt hay
 - **Tiến độ**: 1RM ước tính theo từng bài qua các buổi, danh sách buổi đã tập.
 - **Dữ liệu**: lưu trong `localStorage` của trình duyệt; có sao lưu và khôi phục bằng cách sao chép/dán JSON, và xoá toàn bộ.
 
-## Chạy
+## Lịch tập
+
+| Thứ | Buổi | Bài |
+|---|---|---|
+| 2 | Push | Bench Press · Smith Incline Press · Machine Shoulder Press · Pec Deck · Lateral Raise · Triceps Pushdown |
+| 3 | Pull | Pull-up · Barbell Row · Seated Cable Row · Face Pull · EZ Bar Curl · Hammer Curl |
+| 4 | Leg | Back Squat · Romanian Deadlift · Leg Press · Lying Leg Curl · Calf Raise |
+| 5 | Nghỉ | Đi bộ, giãn cơ |
+| 6 | Upper | Incline DB Press · Lat Pulldown · Cable Fly · Seated Cable Row · Lateral Raise · Reverse Pec Deck · Overhead Triceps Ext. · Hammer Curl |
+| 7 | Lower | Hip Thrust · Bulgarian Split Squat · Leg Extension · Lying Leg Curl · Calf Raise |
+| CN | Nghỉ | |
+
+## Cài lên iPhone (iOS 16.4+, khuyên dùng iPhone 13 trở lên)
+
+1. Bật GitHub Pages cho repo: **Settings → Pages → Build and deployment → Deploy from a branch**, chọn `main` và thư mục `/ (root)`, bấm **Save**. Sau 1–2 phút app có ở `https://nminhcuongdev.github.io/training-app/`.
+2. Mở địa chỉ đó bằng **Safari** trên iPhone.
+3. Bấm nút **Chia sẻ** → **Thêm vào MH chính** (Add to Home Screen) → **Thêm**.
+4. Mở app từ biểu tượng PPL Coach trên màn hình chính: app chạy toàn màn hình như app thật, và vẫn mở được khi phòng gym mất sóng (sau lần mở đầu tiên có mạng).
+
+Lưu ý trên iPhone:
+- App mở từ màn hình chính có bộ nhớ **riêng**, không chung với tab Safari. Hãy chọn một cách mở cố định; muốn chuyển dữ liệu thì dùng Sao lưu/Khôi phục ở tab **Dữ liệu**.
+- Âm báo hết giờ nghỉ sẽ không kêu nếu iPhone đang bật **chế độ im lặng**. iPhone cũng không hỗ trợ rung từ web app.
+
+## Chạy trên máy tính
 
 ```bash
 open index.html        # macOS
 xdg-open index.html    # Linux
 ```
 
-Hoặc bật GitHub Pages cho repo (Settings → Pages → nhánh `main`, thư mục `/`) để mở app trên điện thoại.
+Service worker (chế độ offline) chỉ chạy khi mở qua `https://` hoặc `localhost`, ví dụ `python3 -m http.server`; mở thẳng file thì app vẫn chạy nhưng không lưu bản offline.
 
 App cần mạng để tải thư viện 3D (three.js r149 từ jsDelivr) và font chữ. Nếu không tải được thư viện 3D, phần ghi hiệp và đồng hồ vẫn dùng bình thường.
 

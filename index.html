@@ -3,9 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PPL Coach">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ECEEEA">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1216">
+<meta name="format-detection" content="telephone=no">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>PPL Coach</title>
-<meta name="theme-color" content="#0F1216">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap">
@@ -37,6 +46,8 @@
   --timer-bg:#E9ECF1; --timer-ink:#12161D; color-scheme:dark;
 }
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a{touch-action:manipulation;-webkit-user-select:none;user-select:none}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;margin:0;-webkit-tap-highlight-color:transparent}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -131,7 +142,7 @@ details.guide[open] summary::after{content:"–"}
 .sr .no{font-family:var(--f-mono);font-size:.85rem;color:var(--muted);text-align:center}
 .step{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--bg);height:44px}
 .step button{border:0;background:var(--surface-2);font-size:1.1rem;font-family:var(--f-mono)}
-.step input{border:0;background:transparent;text-align:center;font-family:var(--f-mono);font-size:1rem;width:100%;min-width:0;padding:0;-moz-appearance:textfield}
+.step input{border:0;background:transparent;text-align:center;font-family:var(--f-mono);font-size:16px;width:100%;min-width:0;padding:0;-moz-appearance:textfield}
 .step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .chk{height:44px;border-radius:9px;border:1px solid var(--line);background:var(--bg);font-size:1.2rem;color:var(--muted)}
 .sr.d .chk{background:var(--ok);border-color:var(--ok);color:#fff}
@@ -200,14 +211,14 @@ td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabula
 .sesi small{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
 .sesi .x{background:none;border:0;color:var(--muted);font-size:.8rem}
 .empty{border:1px dashed var(--line);border-radius:12px;padding:22px 16px;text-align:center;color:var(--muted);font-size:.9rem}
-textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:8px;font-family:var(--f-mono);font-size:.75rem}
+textarea{width:100%;min-height:120px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:8px;font-family:var(--f-mono);font-size:16px}
 .confirm{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px;font-size:.86rem}
 .toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(64px + env(safe-area-inset-top,0px));z-index:40;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:.85rem;max-width:90vw}
 .modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.5);display:grid;place-items:center;padding:16px}
 .modal .card{max-width:420px;width:100%;margin:0}
 .modal .stats{margin:10px 0}
 .field{display:grid;gap:4px;font-size:.8rem;color:var(--muted)}
-.field input,.field select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:.95rem}
+.field input,.field select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:16px}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .tog{display:flex;align-items:center;gap:8px;font-size:.9rem;margin-bottom:8px}
 @media (min-width:700px){ .host{aspect-ratio:16/10} .sess h1{font-size:3.6rem} }
@@ -700,21 +711,104 @@ hipThrust:{
     {t:"Ngửa đầu ra sau", mk:"neck", B:{neck:-40},
      why:"Ngửa đầu kéo theo ưỡn lưng, và cổ phải chịu lực.",
      fix:"Mắt nhìn về phía gối, cằm cúi nhẹ."}
+  ]},
+smithIncline:{
+  name:"Smith Incline Press", vn:"Đẩy ngực dốc 30° máy Smith", equip:"Máy Smith + ghế dốc",
+  p:["chest","frontDelt"], s:["triceps"],
+  tempo:[2.5,0.4,1,0.4], startEcc:true, contractAt:"A",
+  cam:{t:[0,1.0,-0.15], d:3.4, yaw:58, pitch:14},
+  props:[{k:"inclineBench",P:[0,0.55,0.15],R:[-60,0,0]},{k:"smith",z:-0.24},{k:"barbell",type:"oly"}],
+  A:{P:[0,0.55,0.15],R:[-60,0,0],H:[0.36,1.36,-0.24],EP:[1,-0.4,0.35],F:[0.22,0.07,0.68],KP:[0.2,1,0.5]},
+  B:{H:[0.36,0.97,-0.24]},
+  mech:"Thanh Smith chạy trên ray cố định nên bạn không phải giữ thăng bằng; toàn bộ sức dồn vào ngực trên, vai trước và tay sau. Ghế dốc 30° làm cánh tay đẩy chéo lên theo hướng thớ ngực trên. Vì đường đi cố định, vị trí ghế quyết định thanh chạm vào đâu: chỉnh ghế để thanh hạ đúng ngực trên, ngay dưới xương đòn.",
+  joints:[["Vai","Gập + khép ngang"],["Khuỷu","Duỗi"],["Bả vai","Ép vào ghế"]],
+  cues:["Hạ thanh chậm về ngực trên trong 2–3 giây","Chạm nhẹ ngực trên, khuỷu thấp hơn thân một chút","Đẩy thẳng lên theo ray, gót chân ép sàn","Duỗi gần thẳng tay, không khóa cứng khuỷu"],
+  tips:["Trước hiệp đầu, hạ thử thanh không tạ để chỉnh ghế cho thanh chạm đúng ngực trên","Đặt chốt an toàn của Smith ngay trên ngực để tập gần kiệt sức không cần người đỡ","Gỡ và gác thanh bằng cách xoay cổ tay"],
+  errors:[
+    {t:"Xòe khuỷu 90°", mk:"elbows", B:{EP:[1,0.1,-0.25]},
+     why:"Chỏm vai bị đẩy ra trước dưới tải nặng, dễ đau phía trước vai.",
+     fix:"Khép khuỷu khoảng 45–60° so với thân."},
+    {t:"Nhấc mông, ưỡn lưng để đẩy", mk:"hips", B:{P:[0,0.66,0.16],R:[-70,0,0],lum:-14},
+     why:"Ghế dốc biến thành ghế phẳng, ngực trên mất tác dụng và lưng dưới bị nén.",
+     fix:"Mông dính ghế. Phải ưỡn mới đẩy nổi tức là tạ đang quá nặng."}
+  ]},
+pecDeck:{
+  name:"Pec Deck", vn:"Ép ngực máy pec deck", equip:"Máy pec deck",
+  p:["chest"], s:["frontDelt"],
+  tempo:[1,0.8,2.2,0.3], startEcc:false, contractAt:"B",
+  cam:{t:[0,1.05,0.05], d:3.4, yaw:32, pitch:18},
+  props:[{k:"seatMachine",P:[0,0.58,0],R:[-4,0,0]},{k:"flyArms",pivot:[0.19,1.62,-0.05]}],
+  A:{P:[0,0.58,0],R:[-4,0,0],H:[0.7,1.12,-0.1],EP:[1,0.1,-0.3],F:[0.18,0.07,0.42],KP:[0.15,0.3,1]},
+  M:{H:[0.525,1.12,0.335]},
+  B:{H:[0.07,1.12,0.45],EP:[1,0.1,-0.2]},
+  mech:"Khớp vai khép ngang theo một cung tròn quanh trục máy, khuỷu giữ cố định hơi gập. Tựa lưng và đường đi cố định giúp bạn dồn hết sức vào ngực và ép sát kiệt sức một cách an toàn, nên bài này đặt cuối buổi Push, lúc các cơ giữ thăng bằng đã mỏi.",
+  joints:[["Vai","Khép ngang"],["Khuỷu","Cố định gập nhẹ"],["Bả vai","Ép vào đệm lưng"]],
+  cues:["Ép hai tay cầm về giữa ngực theo vòng cung","Siết ngực 1 giây, hai tay cầm gần chạm nhau","Mở tay chậm đến khi ngực căng, tay ngang thân","Ngực ưỡn, bả vai dính đệm lưng"],
+  tips:["Chỉnh ghế để tay cầm ngang ngực giữa hoặc thấp hơn vai một chút","Chỉnh điểm bắt đầu của máy để tay mở ngang thân, không vượt ra sau lưng"],
+  errors:[
+    {t:"Vai nhô ra trước, lưng rời đệm", mk:"shoulders", B:{tho:18,R:[10,0,0],H:[0.07,1.06,0.55]},
+     why:"Vai trước và cơ ngực nhỏ làm thay, cơ ngực lớn không siết được hết.",
+     fix:"Giữ bả vai ép vào đệm, chỉ cánh tay di chuyển."},
+    {t:"Mở tay quá sâu ra sau", mk:"shoulders", A:{H:[0.63,1.12,-0.305]}, M:{H:[0.6,1.12,0.25]},
+     why:"Kéo căng bao khớp vai trước khi đang có tải, dễ chấn thương.",
+     fix:"Chỉnh điểm bắt đầu để tay chỉ mở ngang thân."}
+  ]},
+reversePecDeck:{
+  name:"Reverse Pec Deck", vn:"Bay vai sau máy pec deck", equip:"Máy pec deck (ngồi quay mặt vào máy)",
+  p:["rearDelt","upperBack"], s:["traps","sideDelt"],
+  tempo:[1,0.8,2,0.3], startEcc:false, contractAt:"B",
+  cam:{t:[0,1.05,0], d:3.4, yaw:-145, pitch:20},
+  props:[{k:"seatMachine",P:[0,0.58,0],R:[6,0,0],chest:true},{k:"flyArms",pivot:[0.19,1.62,0.02]}],
+  A:{P:[0,0.58,0],R:[6,0,0],H:[0.08,1.12,0.52],EP:[0.3,1,-0.4],F:[0.18,0.07,0.4],KP:[0.15,0.3,1]},
+  M:{H:[0.525,1.12,0.405]},
+  B:{H:[0.7,1.12,-0.02]},
+  mech:"Duỗi ngang vai: kéo cánh tay từ trước ngực mở sang hai bên theo vòng cung. Ngực tựa vào đệm nên thân không đung đưa được, vai sau và lưng giữa phải tự làm hết. Vai sau là cơ nhỏ, nên dùng tạ nhẹ, nhiều rep và nhịp chậm.",
+  joints:[["Vai","Duỗi ngang"],["Bả vai","Khép nhẹ ở cuối"],["Khuỷu","Cố định hơi gập"]],
+  cues:["Mở tay sang ngang, dẫn bằng khuỷu và mu bàn tay","Dừng khi tay thẳng hàng vai, siết vai sau 1 giây","Đưa tay về trước chậm 2 giây","Ngực dính đệm, cổ dài, không nhún vai"],
+  tips:["Cầm tay cầm dọc (lòng bàn tay hướng vào nhau) để vai sau làm nhiều hơn cơ thang","Chỉnh ghế để tay cầm ngang vai"],
+  errors:[
+    {t:"Nhún vai, kéo bằng cầu vai", mk:"neck", B:{H:[0.64,1.32,-0.06],EP:[0.3,1,0]},
+     why:"Cơ thang trên chiếm lực, vai sau làm rất ít.",
+     fix:"Giảm tạ, đẩy vai xa tai, mở tay rộng ra chứ không kéo lên."},
+    {t:"Ngả người ra sau lấy đà", mk:"lumbar", tempo:[0.5,0,0.7,0], B:{R:[-18,0,0]},
+     why:"Thân rời đệm, quán tính làm thay cho vai sau.",
+     fix:"Ngực luôn dính đệm, nhịp 1 giây mở, 2 giây về."}
+  ]},
+machinePress:{
+  name:"Machine Shoulder Press", vn:"Đẩy vai máy ngồi", equip:"Máy đẩy vai",
+  p:["frontDelt","sideDelt","triceps"], s:["traps"],
+  tempo:[1,0.3,2,0.4], startEcc:false, contractAt:"B",
+  cam:{t:[0,1.15,0], d:3.5, yaw:55, pitch:8},
+  props:[{k:"seatMachine",P:[0,0.58,0],R:[-8,0,0]},{k:"levers",pivot:[0.34,0.92,-0.42]}],
+  A:{P:[0,0.58,0],R:[-8,0,0],H:[0.33,1.2,0.05],EP:[0.6,-1,0.3],F:[0.18,0.07,0.4],KP:[0.15,0.3,1]},
+  B:{H:[0.26,1.66,0.0],EP:[1,-0.1,0]},
+  mech:"Vai gập và dạng, đẩy tay cầm từ ngang tai lên trên đầu trong khi khuỷu duỗi. Máy có tựa lưng và quỹ đạo cố định nên lưng dưới không phải gồng giữ như khi đẩy vai đứng; bạn dồn sức vào vai và đẩy gần kiệt sức an toàn hơn. Với mục tiêu tăng cơ, đây là lựa chọn tốt hơn đẩy thanh đòn đứng.",
+  joints:[["Vai","Gập + dạng"],["Khuỷu","Duỗi"],["Bả vai","Xoay lên"]],
+  cues:["Đẩy tay cầm thẳng lên, hơi chụm vào trong","Duỗi gần thẳng tay, không khóa cứng khuỷu","Hạ chậm đến khi tay cầm ngang tai","Lưng và đầu tựa đệm, gồng bụng"],
+  tips:["Chỉnh ghế để tay cầm ngang tai ở điểm bắt đầu","Cẳng tay gần thẳng đứng ở điểm thấp nhất"],
+  errors:[
+    {t:"Ưỡn lưng, lưng rời đệm", mk:"lumbar", B:{lum:-18,R:[-18,0,0]},
+     why:"Bài đẩy vai biến thành đẩy ngực dốc, thắt lưng bị nén.",
+     fix:"Ép lưng dưới vào đệm, siết bụng; giảm tạ nếu phải ưỡn."},
+    {t:"Nửa rep, hạ không đủ sâu", mk:"elbows", A:{H:[0.3,1.42,0.05]},
+     why:"Bỏ mất đoạn vai giãn ở dưới, đoạn kích thích tăng cơ tốt.",
+     fix:"Mỗi rep hạ đến khi tay cầm ngang tai."}
   ]}
+
 };
 
 /* loại dụng cụ & bước tăng tạ (kg) */
 const KIND={bench:["bb",2.5],inclineDB:["db",2],ohp:["bb",2.5],cableFly:["cable",2.5],lateral:["db",1],pushdown:["cable",2.5],ohTri:["db",2],
   pullup:["bw",2.5],bbRow:["bb",2.5],latPulldown:["cable",5],seatedRow:["cable",5],facePull:["cable",2.5],ezCurl:["bb",2.5],hammer:["db",1],
-  squat:["bb",2.5],rdl:["bb",5],legPress:["machine",10],bulgarian:["db",2],legCurl:["machine",5],legExt:["machine",5],calf:["machine",5],hipThrust:["bb",5]};
-const WLAB={bb:"kg tổng",db:"kg / tạ",cable:"kg",machine:"kg",bw:"kg đeo thêm"};
+  squat:["bb",2.5],rdl:["bb",5],smithIncline:["smith",2.5],pecDeck:["machine",5],reversePecDeck:["machine",2.5],machinePress:["machine",5],legPress:["machine",10],bulgarian:["db",2],legCurl:["machine",5],legExt:["machine",5],calf:["machine",5],hipThrust:["bb",5]};
+const WLAB={bb:"kg tổng",smith:"kg đĩa",db:"kg / tạ",cable:"kg",machine:"kg",bw:"kg đeo thêm"};
 const R=(id,sets,lo,hi,rest,rir,note)=>({id,sets,lo,hi,rest,rir,note:note||""});
 const PROG = [
-  {d:"Thứ 2",s:"T2",ty:"Push",c:"push",fo:"Ngực · vai · tay sau, tạ nặng",min:65,ex:[R("bench",4,6,8,165,2),R("inclineDB",3,8,10,120,2),R("ohp",3,6,8,120,2),R("cableFly",3,12,15,75,1),R("lateral",4,12,20,60,1),R("pushdown",3,10,12,60,1)]},
+  {d:"Thứ 2",s:"T2",ty:"Push",c:"push",fo:"Ngực · vai · tay sau, tạ nặng",min:65,ex:[R("bench",4,6,8,165,2),R("smithIncline",3,6,10,120,2),R("machinePress",3,8,10,90,1),R("pecDeck",3,12,15,60,1),R("lateral",4,12,20,60,1),R("pushdown",3,10,12,60,1)]},
   {d:"Thứ 3",s:"T3",ty:"Pull",c:"pull",fo:"Lưng · vai sau · tay trước, tạ nặng",min:65,ex:[R("pullup",4,6,10,150,2),R("bbRow",4,6,8,150,2),R("seatedRow",3,10,12,90,2),R("facePull",3,15,20,60,1),R("ezCurl",3,8,10,75,1),R("hammer",2,10,12,60,1)]},
   {d:"Thứ 4",s:"T4",ty:"Leg",c:"leg",fo:"Squat · đùi sau · bắp chân",min:70,ex:[R("squat",4,5,8,180,2),R("rdl",3,8,10,150,2),R("legPress",3,10,12,120,2),R("legCurl",3,10,12,75,1),R("calf",4,10,15,60,1)]},
   {d:"Thứ 5",s:"T5",ty:"Nghỉ",c:"rest",rest:"Đi bộ 8–10k bước, giãn cơ hông và ngực 10 phút, ngủ 7–9 tiếng."},
-  {d:"Thứ 6",s:"T6",ty:"Upper",c:"push",fo:"Thân trên, nhiều rep",min:70,ex:[R("inclineDB",3,10,12,90,1),R("latPulldown",4,10,12,90,1),R("cableFly",3,12,15,60,1),R("seatedRow",3,10,12,90,1),R("lateral",3,15,20,45,1),R("ohTri",3,10,12,60,1),R("hammer",3,10,12,60,1)]},
+  {d:"Thứ 6",s:"T6",ty:"Upper",c:"push",fo:"Thân trên, nhiều rep",min:75,ex:[R("inclineDB",3,10,12,90,1),R("latPulldown",4,10,12,90,1),R("cableFly",3,12,15,60,1),R("seatedRow",3,10,12,90,1),R("lateral",3,15,20,45,1),R("reversePecDeck",3,15,20,45,1),R("ohTri",3,10,12,60,1),R("hammer",2,10,12,60,1)]},
   {d:"Thứ 7",s:"T7",ty:"Lower",c:"leg",fo:"Mông · đùi, nhiều rep",min:60,ex:[R("hipThrust",4,8,10,120,2),R("bulgarian",3,8,10,90,2,"mỗi chân"),R("legExt",3,12,15,75,1),R("legCurl",3,12,15,75,1),R("calf",4,12,15,60,1)]},
   {d:"Chủ nhật",s:"CN",ty:"Nghỉ",c:"rest",rest:"Nghỉ hoàn toàn. Chuẩn bị đồ ăn cho tuần, cân và ghi lại cân nặng trung bình."}
 ];
@@ -912,6 +1006,7 @@ function makeDB(parent,axis){
   [1,-1].forEach(s=>{ cyl(0.055,0.06,mPlate,h,[0,s*0.1,0]); });
   return g;
 }
+function span(m,a,b){ const d=b.clone().sub(a); const L=Math.max(0.001,d.length()); m.position.copy(a).addScaledVector(d,0.5); m.scale.set(1,L,1); m.quaternion.setFromUnitVectors(V(0,1,0),d.divideScalar(L)); }
 function line(){ const geo=new TH.BufferGeometry().setFromPoints([V(0,0,0),V(0,1,0)]); const l=new TH.Line(geo,mCable); propsG.add(l); return l; }
 function setLine(l,a,b){ const p=l.geometry.attributes.position; p.setXYZ(0,a.x,a.y,a.z); p.setXYZ(1,b.x,b.y,b.z); p.needsUpdate=true; l.geometry.computeBoundingSphere(); }
 const handsMid = ()=>rig.arm[1].W.clone().add(rig.arm[-1].W).multiplyScalar(0.5);
@@ -953,6 +1048,19 @@ function buildProps(ex){
       case "roller":{ const g=G(propsG); cyl(0.05,0.42,mPad,g,[0,0,0],[0,0,Math.PI/2]);
         updaters.push(()=>{ const F=FRAMES(); const a=F[pr.frames[0]].localToWorld(V(...pr.p)), b=F[pr.frames[1]].localToWorld(V(-pr.p[0],pr.p[1],pr.p[2])); g.position.copy(a.add(b).multiplyScalar(0.5)); }); break; }
       case "box":{ const m=box(pr.c,pr.s,pr.pad?mPad:mFrame); break; }
+      case "smith":{ [1,-1].forEach(s=>{ box([s*0.62,1.12,pr.z],[0.07,2.24,0.07],mFrame); box([s*0.62,0.02,pr.z],[0.12,0.04,0.7],mFrame); }); box([0,2.22,pr.z],[1.36,0.07,0.07],mFrame);
+        const sl=[1,-1].map(s=>box([s*0.62,1,pr.z],[0.11,0.1,0.11],mMetal)); sl.forEach(m=>m.userData.dyn=false);
+        updaters.push(()=>{ const y=handsMid().y; sl.forEach(m=>m.position.y=y); }); break; }
+      case "seatMachine":{ const P=pr.P,R=pr.R; box([0,0.47,0.04],[0.44,0.08,0.42],mPad); box([0,0.23,0.02],[0.08,0.44,0.08],mFrame); box([0,0.02,0.0],[0.5,0.04,0.6],mFrame);
+        if(pr.chest){ box([0,1.0,0.235],[0.36,0.5,0.07],mPad); box([0,0.7,0.32],[0.06,0.5,0.06],mFrame); box([0,1.15,0.85],[0.14,2.3,0.14],mFrame); box([0,0.45,0.85],[0.3,0.6,0.18],mPlate); box([0,1.66,0.43],[0.08,0.06,0.85],mFrame); }
+        else { bodyPad(P,R,[0,0.36,-0.15],[0.42,0.78,0.07]); const b=bodyPoint(P,R,[0,0.2,-0.22]); box([0,b.y/2+0.1,b.z-0.02],[0.06,b.y,0.06],mFrame); box([0,1.15,-0.6],[0.14,2.3,0.14],mFrame); box([0,0.45,-0.6],[0.3,0.6,0.18],mPlate); box([0,1.66,-0.33],[0.08,0.06,0.55],mFrame); }
+        break; }
+      case "flyArms":{ const segs=[1,-1].map(s=>({s,h:cyl(0.02,1,mMetal),v:cyl(0.022,1,mMetal),g:cyl(0.03,0.14,mPad),p:V(s*pr.pivot[0],pr.pivot[1],pr.pivot[2])}));
+        box([0,pr.pivot[1]+0.03,pr.pivot[2]],[0.5,0.05,0.08],mFrame);
+        updaters.push(()=>{ segs.forEach(o=>{ const W=rig.arm[o.s].W; const top=V(W.x,o.p.y,W.z); span(o.h,o.p,top); span(o.v,top,V(W.x,W.y-0.07,W.z)); o.g.position.copy(W); o.g.rotation.set(0,0,0); }); }); break; }
+      case "levers":{ const segs=[1,-1].map(s=>({s,l:cyl(0.025,1,mMetal),g:cyl(0.028,0.15,mPad),p:V(s*pr.pivot[0],pr.pivot[1],pr.pivot[2])}));
+        updaters.push(()=>{ segs.forEach(o=>{ const W=rig.arm[o.s].W; span(o.l,o.p,W); o.g.position.copy(W); o.g.rotation.set(Math.PI/2,0,0); }); }); break; }
+
     }
   });
 }
@@ -1129,8 +1237,8 @@ function suggest(row){
 }
 function warmup(row,w){
   const kind=KIND[row.id][0];
-  if(kind!=="bb"||!w||w<30) return "";
-  const parts=[`<b>20 kg</b> × 10`]; let prev=20;
+  if((kind!=="bb"&&kind!=="smith")||!w||w<(kind==="bb"?30:10)) return "";
+  const parts=[kind==="bb"?`<b>20 kg</b> × 10`:`<b>Thanh không</b> × 10`]; let prev=kind==="bb"?20:0;
   [[0.5,8],[0.7,5],[0.85,2]].forEach(([p,r])=>{ const x=roundTo(w*p,2.5); if(x>prev&&x<w){ parts.push(`<b>${fw(x)} kg</b> × ${r}`); prev=x; } });
   return "Khởi động: "+parts.join(" → ");
 }
@@ -1410,6 +1518,11 @@ if(S.cur) lockScreen();
 window.__ppl={EX,PROG,demo,get S(){return S;},ui,renderToday};
 
 })();
+</script>
+<script>
+if("serviceWorker" in navigator && (location.protocol==="https:" || location.hostname==="localhost")){
+  addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
 </script>
 </body>
 </html>
