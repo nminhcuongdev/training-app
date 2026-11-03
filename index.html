@@ -397,7 +397,7 @@ lateral:{
     {t:"Đung đưa thân, quăng tạ", mk:"lumbar", tempo:[0.45,0,0.6,0.1], A:{R:[14,0,0]}, B:{R:[-12,0,0],lum:-8},
      why:"Lấy đà bằng hông và lưng, vai giữa gần như không làm việc.",
      fix:"Giảm tạ 30–40%, đứng vững, nhịp 1 giây lên, 2 giây xuống."},
-    {t:"Nhún vai, nâng quá cao", mk:"neck", B:{H:[0.6,1.72,0.1],EP:[0.3,1,0]},
+    {t:"Nhún vai, nâng quá cao", mk:"neck", B:{shrug:18,H:[0.6,1.72,0.1],EP:[0.3,1,0]},
      why:"Cơ thang trên chiếm lực, dễ gây kẹt chỏm vai (impingement).",
      fix:"Dừng ở ngang vai và nghĩ đến việc đẩy vai ra xa tai."}
   ]},
@@ -407,7 +407,7 @@ pushdown:{
   tempo:[1,0.5,2,0.2], startEcc:false, contractAt:"B",
   cam:{t:[0,1.15,0.1], d:3.0, yaw:65, pitch:8},
   props:[{k:"tower",x:0,z:0.6,y:2.05},{k:"rope",from:[0,2.05,0.5]}],
-  A:{R:[10,0,0],H:[0.1,1.16,0.34],EP:[0.1,-0.2,-1]},
+  A:{R:[10,0,0],shrug:-3,H:[0.1,1.16,0.34],EP:[0.1,-0.2,-1]},
   B:{H:[0.13,0.88,0.2],EP:[0.1,0,-1]},
   mech:"Chỉ khớp khuỷu duỗi; cánh tay khóa sát sườn. Tay sau có 3 đầu, và pushdown nhấn mạnh đầu ngoài cùng đầu giữa. Dây thừng cho phép tách hai tay ở cuối động tác để siết sâu hơn.",
   joints:[["Khuỷu","Duỗi"],["Vai","Cố định, cánh tay sát thân"]],
@@ -447,8 +447,9 @@ pullup:{
   tempo:[1,0.5,2,0.5], startEcc:false, contractAt:"B",
   cam:{t:[0,1.55,0], d:3.9, yaw:40, pitch:6},
   props:[{k:"pullupBar",y:2.25}],
-  A:{fixH:true,P:[0,1.16,0],H:[0.32,2.25,0],EP:[1,-0.4,-0.2],F:T("pelvis",0.08,-0.72,-0.25),KP:[0,0,1],fm:"shin",ank:25},
-  B:{P:[0,1.55,-0.05],R:[-15,0,0],tho:-10,neck:-8},
+  A:{fixH:true,P:[0,1.1,0],R:[3,0,0],shrug:16,H:[0.32,2.25,0],EP:[1,-0.4,-0.2],F:T("pelvis",0.0,-0.64,-0.2),FR:T("pelvis",-0.03,-0.6,-0.28),KP:[0,0,1],KPR:[0,0,1],fm:"shin",ank:25},
+  M:{shrug:-4,R:[-6,0,0],tho:-6},
+  B:{P:[0,1.55,-0.05],R:[-15,0,0],tho:-12,neck:-8,shrug:-6},
   mech:"Khớp vai khép và duỗi, kéo khuỷu xuống sườn. Cơ xô là động cơ chính; cơ thoi và cơ thang giữa hạ và khép bả vai; tay trước gập khuỷu. Ở đáy, treo người với tay gần thẳng kéo giãn xô tối đa.",
   joints:[["Vai","Khép + duỗi"],["Bả vai","Hạ + khép"],["Khuỷu","Gập"]],
   cues:["Kéo khuỷu xuống về phía túi quần, ngực hướng lên xà","Cằm qua xà, siết lưng","Hạ chậm đến khi tay gần thẳng","Treo chủ động: vai không rơi lên tai"],
@@ -778,7 +779,7 @@ pecDeck:{
   cues:["Ép hai tay cầm về giữa ngực theo vòng cung","Siết ngực 1 giây, hai tay cầm gần chạm nhau","Mở tay chậm đến khi ngực căng, tay ngang thân","Ngực ưỡn, bả vai dính đệm lưng"],
   tips:["Chỉnh ghế để tay cầm ngang ngực giữa hoặc thấp hơn vai một chút","Chỉnh điểm bắt đầu của máy để tay mở ngang thân, không vượt ra sau lưng"],
   errors:[
-    {t:"Vai nhô ra trước, lưng rời đệm", mk:"shoulders", B:{tho:18,R:[10,0,0],H:[0.07,1.06,0.55]},
+    {t:"Vai nhô ra trước, lưng rời đệm", mk:"shoulders", scap:"free", B:{tho:14,R:[8,0,0],prot:14,H:[0.07,1.06,0.55]},
      why:"Vai trước và cơ ngực nhỏ làm thay, cơ ngực lớn không siết được hết.",
      fix:"Giữ bả vai ép vào đệm, chỉ cánh tay di chuyển."},
     {t:"Mở tay quá sâu ra sau", mk:"shoulders", A:{H:[0.63,1.12,-0.305]}, M:{H:[0.6,1.12,0.25]},
@@ -799,7 +800,7 @@ reversePecDeck:{
   cues:["Mở tay sang ngang, dẫn bằng khuỷu và mu bàn tay","Dừng khi tay thẳng hàng vai, siết vai sau 1 giây","Đưa tay về trước chậm 2 giây","Ngực dính đệm, cổ dài, không nhún vai"],
   tips:["Cầm tay cầm dọc (lòng bàn tay hướng vào nhau) để vai sau làm nhiều hơn cơ thang","Chỉnh ghế để tay cầm ngang vai"],
   errors:[
-    {t:"Nhún vai, kéo bằng cầu vai", mk:"neck", B:{H:[0.64,1.32,-0.06],EP:[0.3,1,0]},
+    {t:"Nhún vai, kéo bằng cầu vai", mk:"neck", B:{shrug:16,H:[0.64,1.32,-0.06],EP:[0.3,1,0]},
      why:"Cơ thang trên chiếm lực, vai sau làm rất ít.",
      fix:"Giảm tạ, đẩy vai xa tai, mở tay rộng ra chứ không kéo lên."},
     {t:"Ngả người ra sau lấy đà", mk:"lumbar", tempo:[0.5,0,0.7,0], B:{R:[-18,0,0]},
@@ -813,7 +814,7 @@ machinePress:{
   cam:{t:[0,1.15,0], d:3.5, yaw:55, pitch:8},
   props:[{k:"seatMachine",P:[0,0.58,0],R:[-8,0,0]},{k:"levers",pivot:[0.34,0.92,-0.42]}],
   A:{P:[0,0.58,0],R:[-8,0,0],H:[0.33,1.2,0.05],EP:[0.6,-1,0.3],F:[0.18,0.07,0.4],KP:[0.15,0.3,1]},
-  B:{H:[0.26,1.66,0.0],EP:[1,-0.1,0]},
+  B:{shrug:4,H:[0.26,1.66,0.0],EP:[1,-0.1,0]},
   mech:"Vai gập và dạng, đẩy tay cầm từ ngang tai lên trên đầu trong khi khuỷu duỗi. Máy có tựa lưng và quỹ đạo cố định nên lưng dưới không phải gồng giữ như khi đẩy vai đứng; bạn dồn sức vào vai và đẩy gần kiệt sức an toàn hơn. Với mục tiêu tăng cơ, đây là lựa chọn tốt hơn đẩy thanh đòn đứng.",
   joints:[["Vai","Gập + dạng"],["Khuỷu","Duỗi"],["Bả vai","Xoay lên"]],
   cues:["Đẩy tay cầm thẳng lên, hơi chụm vào trong","Duỗi gần thẳng tay, không khóa cứng khuỷu","Hạ chậm đến khi tay cầm ngang tai","Lưng và đầu tựa đệm, gồng bụng"],
@@ -844,7 +845,7 @@ machineRow:{
     {t:"Ngực rời đệm, ngả người kéo", mk:"lumbar", tempo:[0.5,0,0.8,0], B:{R:[-14,0,0]},
      why:"Thân ngả ra sau tạo quán tính, lưng dưới làm thay và mất đúng lợi thế của máy tựa ngực.",
      fix:"Ngực luôn dính đệm. Phải ngả mới kéo nổi tức là tạ đang quá nặng."},
-    {t:"Kéo ngắn, không ép bả vai", mk:"shoulders", B:{H:[0.22,0.99,0.46]}, M:{H:[0.21,0.99,0.56]},
+    {t:"Kéo ngắn, không ép bả vai", mk:"shoulders", scap:"set", B:{H:[0.22,0.99,0.46]}, M:{H:[0.21,0.99,0.56]},
      why:"Chỉ tay trước làm việc, lưng giữa không bao giờ co hết biên độ.",
      fix:"Kéo đến khi khuỷu ra sau thân và hai bả vai chạm nhau, kể cả phải giảm tạ."}
   ]},
@@ -854,9 +855,9 @@ machinePulldown:{
   tempo:[1,0.6,2.2,0.3], startEcc:false, contractAt:"B",
   cam:{t:[0,1.15,-0.05], d:3.7, yaw:38, pitch:10},
   props:[{k:"isoPulldown"},{k:"plever",pivot:[0.36,1.42,-0.57],back:0.42,grip:"x"}],
-  A:{P:[0,0.58,0],R:[-10,0,0],H:[0.33,1.64,0.1],EP:[1,-0.6,-0.4],F:[0.16,0.07,0.42],KP:[0.1,0.3,1]},
+  A:{P:[0,0.58,0],R:[-8,0,0],shrug:10,H:[0.33,1.64,0.1],EP:[1,-0.6,-0.4],F:[0.16,0.07,0.42],KP:[0.1,0.3,1]},
   M:{H:[0.33,1.366,0.13]},
-  B:{H:[0.33,1.1,0.06],EP:[1,-0.6,-0.5]},
+  B:{R:[-14,0,0],tho:-8,shrug:-5,H:[0.33,1.1,0.06],EP:[1,-0.6,-0.5]},
   mech:"Vai khép và duỗi, kéo khuỷu xuống sườn. Tay cầm đi theo cung tròn quanh trục phía sau và hơi chụm vào ở cuối, trùng với hướng thớ cơ xô, nên xô được kéo giãn sâu ở trên và siết mạnh ở dưới. Máy tải đĩa có lực cản nặng dần ở đoạn dưới, đúng chỗ xô khỏe nhất, và hai tay đòn độc lập giúp hai bên lưng phát triển đều.",
   joints:[["Vai","Khép + duỗi"],["Bả vai","Hạ + khép"],["Khuỷu","Gập"]],
   cues:["Kéo khuỷu xuống và ra sau, tay cầm về ngang vai","Ưỡn ngực đón tay cầm, siết xô 0.5 giây","Thả lên chậm, để vai được kéo lên cao và xô giãn hết","Thân ngả sau khoảng 10°, đùi chèn chặt dưới đệm gối"],
@@ -961,29 +962,78 @@ function buildHuman(){
   const CURL={};
   for(const s of ["l","r"]){
     const wr=hv("hand_"+s,"head"), mid=hv("middle_01_"+s,"head"), across=hv("index_01_"+s,"head").sub(hv("pinky_01_"+s,"head"));
-    const hd=mid.clone().sub(wr).normalize(); let palmN=V(0,0,0).crossVectors(hd,across).normalize(); if(s==="r") palmN.negate();
+    const hd=mid.clone().sub(wr).normalize(); let palmN=V(0,0,0).crossVectors(hd,across).normalize(); if(s==="r") palmN.negate(); PALMN[s==="l"?1:-1]=palmN.clone();
     for(const f of ["index","middle","ring","pinky","thumb"]) for(const j of ["01","02","03"]){
       const n=`${f}_${j}_${s}`; if(!HB[n]) continue;
       const d=hv(n,"tail").sub(hv(n,"head")).normalize(); const ax=V(0,0,0).crossVectors(d,palmN).normalize();
-      const ang=(f==="thumb"?(j==="01"?0.25:0.55):(j==="01"?1.05:j==="02"?1.25:0.9));
+      const ang=(f==="thumb"?(j==="01"?0.45:j==="02"?0.95:0.85):(j==="01"?1.05:j==="02"?1.25:0.9));
       if(ax.lengthSq()>1e-6) CURL[n]=new TH.Quaternion().setFromAxisAngle(ax,ang);
+      if(f==="thumb"&&j==="01") CURL[n]=new TH.Quaternion().setFromAxisAngle(hd,(s==="l"?1:-1)*THUMB_OPP).multiply(CURL[n]);
     }
   }
-  human={mesh:m,bones,skel,C,MAP,CURL,col,nv,pos,nrm:g.attributes.normal.array,si,sw,region:null,base:null,last:""};
+  human={mesh:m,bones,skel,C,MAP,CURL,palmN:PALMN,col,nv,pos,nrm:g.attributes.normal.array,si,sw,region:null,base:null,last:""};
   computeRegions();
   return human;
 }
-const _wq=new TH.Quaternion(), _pq=new TH.Quaternion();
+const _wq=new TH.Quaternion(), _pq=new TH.Quaternion(), QI=new TH.Quaternion(), PALMN={};
+/* sinh cơ học: kiểu cầm (xoay cẳng tay), xương bả vai, cổ */
+let GRIP="neu", SCAP="set";
+var THUMB_OPP=1.5;
+const GRIPS={bench:"pro",smithIncline:"pro",inclineDB:"pro",ohp:"pro",lateral:"pro",pullup:"pro",latPulldown:"pro",machinePulldown:"pro",bbRow:"pro",squat:"pro",rdl:"pro",hipThrust:"pro",machinePress:"pro",legCurl:"pro",ohTri:"sup",ezCurl:"sup"};
+const SCAP_FREE=new Set(["pullup","latPulldown","machinePulldown","bbRow","seatedRow","machineRow","facePull","reversePecDeck","machinePress","ohp","lateral"]);
+const ss01=x=>{ x=Math.min(1,Math.max(0,x)); return x*x*(3-2*x); };
+function gripTwist(s,w0){
+  const q=rig.arm[s].el.getWorldQuaternion(new TH.Quaternion());
+  const f=V(0,-1,0).applyQuaternion(q), Z=V(0,0,1).applyQuaternion(q), X=V(1,0,0).applyQuaternion(q);
+  const nd=GRIP==="sup"?Z:GRIP==="pro"?Z.clone().negate():X.clone().multiplyScalar(-s);
+  const nc=human.palmN[s].clone().applyQuaternion(w0);
+  const pc=nc.sub(f.clone().multiplyScalar(nc.dot(f))), pd=nd.clone().sub(f.clone().multiplyScalar(nd.dot(f)));
+  if(pc.lengthSq()<1e-6||pd.lengthSq()<1e-6) return {half:QI,full:QI};
+  pc.normalize(); pd.normalize();
+  const ang=Math.atan2(f.dot(V(0,0,0).crossVectors(pc,pd)),pc.dot(pd));
+  return {half:new TH.Quaternion().setFromAxisAngle(f,ang*0.5),full:new TH.Quaternion().setFromAxisAngle(f,ang)};
+}
+const CLAV=HD?hv("clavicle_l","head").sub(hv("spine_03","head")):V(0.02,0.2,0.0);
+const C0=RIG.sh.clone().sub(CLAV);
+function scapula(P,HT){
+  const inv=rig.thor.getWorldQuaternion(new TH.Quaternion()).invert();
+  [1,-1].forEach((s,i)=>{
+    const a=rig.arm[s];
+    a.sh.position.set(RIG.sh.x*s,RIG.sh.y,RIG.sh.z); a.sh.updateMatrixWorld(true);
+    const S=a.sh.getWorldPosition(V(0,0,0)), v=HT[i].clone().sub(S).applyQuaternion(inv), d=v.length(); v.normalize();
+    const armEl=Math.asin(Math.max(-1,Math.min(1,v.y)))/D2R;
+    let elev=(P.shrug||0)+Math.max(0,armEl+10)/100*12*(SCAP==="free"?1:0.6), prot=(P.prot||0);
+    if(SCAP==="free"){
+      prot+=ss01((v.z*d/(L1+L2)-0.5)/0.45)*14;
+      const pole=s===1?P.EP:(P.EPR||mirT(P.EP)); ik(a.sh,a.el,HT[i],L1,L2,pole,-1);
+      const E=a.el.getWorldPosition(V(0,0,0)).sub(S).applyQuaternion(inv); prot-=ss01((-E.z-0.03)/0.12)*16;
+    } else { prot-=5; elev-=2; }
+    const q=new TH.Quaternion().setFromEuler(new TH.Euler(0,-s*prot*D2R,s*elev*D2R,"YZX"));
+    a.sh.position.set(CLAV.x*s,CLAV.y,CLAV.z).add(V(C0.x*s,C0.y,C0.z).applyQuaternion(q)); a.sh.updateMatrixWorld(true);
+    a.clavQ=q;
+  });
+}
+function autoNeck(P){ const pitch=P.R[0]+P.lum+P.tho; if(Math.abs(P.R[0])>=60) return 0; return Math.max(-30,Math.min(30,-0.6*pitch)); }
+let LIFE_T=0;
 function humanPose(){
   if(!human||!human.mesh.visible) return;
   const {bones,C,MAP,CURL}=human, wq=new Array(bones.length);
   rig.root.updateMatrixWorld(true);
+  const gq=o=>o.getWorldQuaternion(new TH.Quaternion());
+  const luQ=gq(rig.lum), thQ=gq(rig.thor), nkQ=gq(rig.neck), tw={};
   HD.bones.forEach((b,i)=>{
-    const bone=bones[i], g=MAP[b.name];
+    const n=b.name, bone=bones[i], g=MAP[n];
     const pw=b.parent?wq[HB[b.parent].i]:new TH.Quaternion();
+    const side=n.endsWith("_l")?1:-1;
     let w;
-    if(g){ w=g.getWorldQuaternion(new TH.Quaternion()).multiply(C[b.name]); }
-    else { w=pw.clone(); if(CURL[b.name]) w.multiply(CURL[b.name]); }
+    if(n==="spine_02") w=luQ.clone().slerp(thQ,0.5);
+    else if(n==="neck_01") w=thQ.clone().slerp(nkQ,0.5);
+    else if(n==="head") w=nkQ.clone();
+    else if(n.startsWith("clavicle_")) w=thQ.clone().multiply(rig.arm[side].clavQ||QI);
+    else if(n.startsWith("lowerarm_")){ const w0=gq(g).multiply(C[n]); const t=gripTwist(side,w0); tw[side]={w0,t}; w=t.half.clone().multiply(w0); }
+    else if(n.startsWith("hand_")&&tw[side]){ w=tw[side].t.full.clone().multiply(tw[side].w0); }
+    else if(g){ w=gq(g).multiply(C[n]); }
+    else { w=pw.clone(); if(CURL[n]) w.multiply(CURL[n]); }
     wq[i]=w;
     bone.quaternion.copy(pw.clone().invert().multiply(w));
     if(!b.parent){ rig.root.getWorldPosition(bone.position); }
@@ -1046,7 +1096,7 @@ function computeRegions(){
   const smooth=(A,n)=>{ for(let it=0;it<n;it++){ const Bn=new Float32Array(nv); for(let i=0;i<nv;i++){ let s=A[i]*2, c=2; const l=nb[i]; for(let j=0;j<l.length;j++){ s+=A[l[j]]; c++; } Bn[i]=s/c; } A=Bn; } return A; };
   for(const k in R) R[k]=smooth(R[k],3);
   const sm=smooth(shortsM,2), hm=smooth(hairM,1), clothA=new Float32Array(nv);
-  for(let i=0;i<nv;i++){ const a=Math.min(1,Math.max(0,(sm[i]-0.42)/0.14)), h=Math.min(1,hm[i]*1.4); clothA[i]=a;
+  for(let i=0;i<nv;i++){ const a=Math.min(1,Math.max(0,(sm[i]-0.55)/0.12)), h=Math.min(1,hm[i]*1.4); clothA[i]=a;
     for(let k=0;k<3;k++){ const sk=[SKIN_RGB.r,SKIN_RGB.g,SKIN_RGB.b][k], sh=[SHORTS_RGB.r,SHORTS_RGB.g,SHORTS_RGB.b][k], hr=[HAIR_RGB.r,HAIR_RGB.g,HAIR_RGB.b][k];
       let c=sk+(sh-sk)*a; c=c+(hr-c)*h; base[i*3+k]=c; } }
   human.cloth=clothA;
@@ -1349,18 +1399,21 @@ function ik(up,low,T,l1,l2,poleArr,fs){
 function applyPose(P){
   rig.root.position.set(P.P[0],P.P[1],P.P[2]);
   rig.root.rotation.set(P.R[0]*D2R,P.R[1]*D2R,P.R[2]*D2R,"YXZ");
-  rig.lum.rotation.set(P.lum*D2R,0,0); rig.thor.rotation.set(P.tho*D2R,0,0); rig.neck.rotation.set(P.neck*D2R,0,0);
+  const breath=Math.sin(LIFE_T*1.55)*0.7;
+  rig.lum.rotation.set(P.lum*D2R,0,0); rig.thor.rotation.set((P.tho-breath)*D2R,0,0); rig.neck.rotation.set(((P.autoNeck?autoNeck(P):P.neck)+breath*0.6)*D2R,0,0);
+  if(!P.anc&&!P.fixH){ rig.root.position.x+=Math.sin(LIFE_T*1.1)*0.003; rig.root.position.z+=Math.sin(LIFE_T*0.73)*0.002; }
   rig.root.updateMatrixWorld(true);
   if(P.anc){ const ap=FRAMES()[P.anc.in].localToWorld(V(P.anc.p[0],P.anc.p[1],P.anc.p[2])); rig.root.position.add(V(P.anc.w[0],P.anc.w[1],P.anc.w[2]).sub(ap)); rig.root.updateMatrixWorld(true); }
   // chân chạm sàn: hạ hông nếu chân thật ngắn hơn khung cũ
   if(!P.anc&&P.fm!=="shin"){ let drop=0; [1,-1].forEach(s=>{ const t=s===1?P.F:(P.FR||mirT(P.F)); if(!Array.isArray(t)||t[1]>0.3) return;
-      const h=rig.leg[s].hp.getWorldPosition(V(0,0,0)), mx=T1+T2-0.004, dx=h.x-t[0], dz=h.z-t[2], hz=Math.hypot(dx,dz); if(hz>=mx) return;
+      const h=rig.leg[s].hp.getWorldPosition(V(0,0,0)), mx=T1+T2-0.012, dx=h.x-t[0], dz=h.z-t[2], hz=Math.hypot(dx,dz); if(hz>=mx) return;
       const need=h.y-(t[1]+Math.sqrt(mx*mx-hz*hz)); if(need>drop) drop=need; });
     if(drop>0){ rig.root.position.y-=drop; rig.root.updateMatrixWorld(true); } }
   const HT=[1,-1].map(s=>remapHand(s===1?P.H:(P.HR||mirT(P.H)),P,s,P.fixH));
   // treo xà: kéo người lên cho tay chạm xà
   if(P.fixH){ const sh=V(0,0,0); [1,-1].forEach((s,i)=>{ const S=rig.arm[s].sh.getWorldPosition(V(0,0,0)), d=HT[i].clone().sub(S), L=d.length(), mx=L1+L2-0.003; if(L>mx) sh.add(d.multiplyScalar((L-mx)/L/2)); });
     if(sh.lengthSq()>0){ rig.root.position.add(sh); rig.root.updateMatrixWorld(true); } }
+  scapula(P,HT);
   [1,-1].forEach((s,i)=>{
     const a=rig.arm[s];
     const pole = s===1?P.EP:(P.EPR||mirT(P.EP));
@@ -1543,8 +1596,28 @@ function prepPose(){
     if(er&&er.M) cur.M=merge(cur.M,er.M);
   }
   cur.tempo=(er&&er.tempo)||ex.tempo;
+  GRIP=ex.grip||GRIPS[cur.id]||"neu";
+  SCAP=(er&&er.scap)||(SCAP_FREE.has(cur.id)?"free":"set");
+  const has=o=>o&&o.neck!==undefined;
+  const auto=!(has(ex.A)||has(ex.B)||has(ex.M)||(er&&(has(er.A)||has(er.B)||has(er.M))));
+  [cur.A,cur.B,cur.M].forEach(o=>{ if(o) o.autoNeck=auto; });
 }
-function poseAt(p){ if(cur.M){ return p<0.5? mixPose(cur.A,cur.M,ease(p*2)) : mixPose(cur.M,cur.B,ease((p-0.5)*2)); } return mixPose(cur.A,cur.B,ease(p)); }
+const minJerk=u=>u*u*u*(10-15*u+6*u*u);
+const trap=(u,a)=>{ const v=1/(1-a); if(u<a) return 0.5*v*u*u/a; if(u>1-a){ const w=1-u; return 1-0.5*v*w*w/a; } return 0.5*v*a+v*(u-a); };
+function profile(p,ph){
+  if(ph!==0&&ph!==2) return ease(p);
+  const con=(ph===0)!==cur.ex.startEcc;
+  const E=u=>con?minJerk(u):trap(u,0.2);
+  return ph===0?E(p):1-E(1-p);
+}
+function poseAt(p,ph){
+  const q=profile(p,ph);
+  if(cur.M){
+    const mid=mixPose(cur.A,cur.B,0.5), Cc=mixPose(mid,cur.M,2);
+    return mixPose(mixPose(cur.A,Cc,q),mixPose(Cc,cur.B,q),q);
+  }
+  return mixPose(cur.A,cur.B,q);
+}
 function phaseInfo(t){
   const tp=cur.tempo, tot=tp[0]+tp[1]+tp[2]+tp[3]; let x=((t%tot)+tot)%tot;
   if(x<tp[0]) return {ph:0,p:x/tp[0],tot}; x-=tp[0];
@@ -1603,7 +1676,7 @@ function frame(now){
     if(drive&&drive.id===cur.id){ st.t=drive.fn(); }
     else if(st.playing){ const tot=phaseInfo(st.t).tot; const pc=Math.floor(st.t/tot); st.t+=dt*st.speed; if(Math.floor(st.t/tot)>pc) st.rep++; }
     const info=phaseInfo(st.t);
-    let pose=poseAt(info.p);
+    LIFE_T+=dt; let pose=poseAt(info.p,info.ph);
     if(blendFrom && blendT<1){ blendT=Math.min(1,blendT+dt/0.5); pose=mixPose(blendFrom,pose,ease(blendT)); if(blendT>=1) blendFrom=null; }
     applyPose(pose); lastPose=pose;
     if(STY.angles) updAngles();
