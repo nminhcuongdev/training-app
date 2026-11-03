@@ -7,7 +7,7 @@ Toàn bộ app nằm trong một file `index.html`, không cần cài đặt hay
 ## Tính năng
 
 - **Hôm nay**: tự chọn buổi theo thứ trong tuần. Mỗi bài có:
-  - mô hình 3D chiếu động tác chuẩn đúng nhịp tempo, cơ chính và cơ phụ phát sáng theo pha co/giãn;
+  - mô hình người thật 3D (da liền, có bộ xương) chiếu động tác chuẩn đúng nhịp tempo, cơ chính tô đỏ và cơ phụ tô hồng, đậm dần khi cơ co;
   - nút xem từng **lỗi sai thường gặp** diễn lại trên mô hình, có vòng đỏ đánh dấu khớp bị sai;
   - hướng dẫn cơ chế chuyển động, kỹ thuật theo từng pha, cách sửa lỗi;
   - gợi ý mức tạ hôm nay theo phương pháp tăng tải kép, kèm các hiệp khởi động;
@@ -55,4 +55,4 @@ App cần mạng để tải thư viện 3D (three.js r149 từ jsDelivr) và fo
 ## Ghi chú
 
 - Dữ liệu chỉ nằm trên trình duyệt đang dùng. Mở trên máy khác, hoặc xoá dữ liệu trình duyệt, sẽ không còn lịch sử. Hãy thỉnh thoảng sao lưu ở tab **Dữ liệu**.
-- Mô hình 3D đã được đơn giản hóa để minh họa tư thế và hướng chuyển động, không chính xác tuyệt đối từng góc khớp.
+- Nhân vật 3D là mô hình người thật dựng từ dữ liệu **MakeHuman** (lưới cơ thể, các target hình thể, bộ xương `game_engine` và trọng số da; giấy phép [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)): nam, châu Á, cao 1,65 m, khoảng 60 kg, cơ bắp. App tự chuyển dữ liệu này sang dạng nhúng trong `index.html`; chuyển động được tính bằng IK theo từng bài và gắn lên bộ xương của mô hình.
