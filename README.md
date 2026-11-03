@@ -23,10 +23,10 @@ Toàn bộ app nằm trong một file `index.html`, không cần cài đặt hay
 | Thứ | Buổi | Bài |
 |---|---|---|
 | 2 | Push | Bench Press · Smith Incline Press · Machine Shoulder Press · Pec Deck · Lateral Raise · Triceps Pushdown |
-| 3 | Pull | Pull-up · Barbell Row · Seated Cable Row · Face Pull · EZ Bar Curl · Hammer Curl |
+| 3 | Pull | Pull-up · Chest-Supported Machine Row · Seated Cable Row · Face Pull · EZ Bar Curl · Hammer Curl |
 | 4 | Leg | Back Squat · Romanian Deadlift · Leg Press · Lying Leg Curl · Calf Raise |
 | 5 | Nghỉ | Đi bộ, giãn cơ |
-| 6 | Upper | Incline DB Press · Lat Pulldown · Cable Fly · Seated Cable Row · Lateral Raise · Reverse Pec Deck · Overhead Triceps Ext. · Hammer Curl |
+| 6 | Upper | Incline DB Press · Plate-Loaded Lat Pulldown · Cable Fly · Seated Cable Row · Lateral Raise · Reverse Pec Deck · Overhead Triceps Ext. · Hammer Curl |
 | 7 | Lower | Hip Thrust · Bulgarian Split Squat · Leg Extension · Lying Leg Curl · Calf Raise |
 | CN | Nghỉ | |
 

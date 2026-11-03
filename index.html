@@ -825,21 +825,64 @@ machinePress:{
      why:"Bỏ mất đoạn vai giãn ở dưới, đoạn kích thích tăng cơ tốt.",
      fix:"Mỗi rep hạ đến khi tay cầm ngang tai."}
   ]}
+,
+machineRow:{
+  name:"Chest-Supported Machine Row", vn:"Chèo máy tải đĩa tựa ngực", equip:"Máy chèo tải đĩa có đệm ngực",
+  p:["upperBack","lats","rearDelt"], s:["biceps","traps"],
+  tempo:[1,0.8,2,0.3], startEcc:false, contractAt:"B",
+  cam:{t:[0,0.85,0.25], d:3.3, yaw:-128, pitch:16},
+  props:[{k:"isoRow"},{k:"plever",pivot:[0.3,0.37,0.49],plateAt:0.18,grip:"v"}],
+  A:{P:[0,0.58,0],R:[12,0,0],H:[0.2,0.98,0.66],EP:[0.3,0,-1],F:[0.16,0.13,0.4],KP:[0.1,0.3,1]},
+  M:{H:[0.22,1.0,0.458]},
+  B:{H:[0.24,0.96,0.26],EP:[0.35,0.1,-1]},
+  mech:"Ngực tì vào đệm nên lưng dưới không phải gồng giữ thân như chèo thanh đòn cúi người. Toàn bộ lực dồn vào duỗi vai và khép bả vai: lưng giữa, xô và vai sau kéo tay đòn về sau theo một cung tròn quanh trục máy. Hai tay đòn chạy độc lập, nên bên yếu không ăn gian được bên khỏe, và bạn có thể kéo từng tay một.",
+  joints:[["Vai","Duỗi"],["Bả vai","Dang → khép"],["Khuỷu","Gập"],["Thân","Tì ngực, cố định"]],
+  cues:["Kéo khuỷu ra sau, sát hai bên sườn","Ép hai bả vai vào nhau 0.5–1 giây, ngực vẫn dính đệm","Duỗi tay về trước chậm 2 giây, để bả vai trượt ra","Ngực ưỡn nhẹ, cổ trung lập, không nhún vai"],
+  tips:["Chỉnh ghế để tay cầm ngang ngực dưới khi tay duỗi thẳng","Tay cầm dọc (ngón cái lên) thì xô làm nhiều hơn; tay cầm ngang và mở khuỷu thì lưng giữa và vai sau làm nhiều hơn","Muốn sửa lệch hai bên: hiệp cuối kéo từng tay một"],
+  errors:[
+    {t:"Ngực rời đệm, ngả người kéo", mk:"lumbar", tempo:[0.5,0,0.8,0], B:{R:[-14,0,0]},
+     why:"Thân ngả ra sau tạo quán tính, lưng dưới làm thay và mất đúng lợi thế của máy tựa ngực.",
+     fix:"Ngực luôn dính đệm. Phải ngả mới kéo nổi tức là tạ đang quá nặng."},
+    {t:"Kéo ngắn, không ép bả vai", mk:"shoulders", B:{H:[0.22,0.99,0.46]}, M:{H:[0.21,0.99,0.56]},
+     why:"Chỉ tay trước làm việc, lưng giữa không bao giờ co hết biên độ.",
+     fix:"Kéo đến khi khuỷu ra sau thân và hai bả vai chạm nhau, kể cả phải giảm tạ."}
+  ]},
+machinePulldown:{
+  name:"Plate-Loaded Lat Pulldown", vn:"Kéo xà máy tải đĩa", equip:"Máy kéo xà tải đĩa (tay đòn độc lập)",
+  p:["lats"], s:["biceps","upperBack","rearDelt"],
+  tempo:[1,0.6,2.2,0.3], startEcc:false, contractAt:"B",
+  cam:{t:[0,1.15,-0.05], d:3.7, yaw:38, pitch:10},
+  props:[{k:"isoPulldown"},{k:"plever",pivot:[0.36,1.42,-0.57],back:0.42,grip:"x"}],
+  A:{P:[0,0.58,0],R:[-10,0,0],H:[0.33,1.64,0.1],EP:[1,-0.6,-0.4],F:[0.16,0.07,0.42],KP:[0.1,0.3,1]},
+  M:{H:[0.33,1.366,0.13]},
+  B:{H:[0.33,1.1,0.06],EP:[1,-0.6,-0.5]},
+  mech:"Vai khép và duỗi, kéo khuỷu xuống sườn. Tay cầm đi theo cung tròn quanh trục phía sau và hơi chụm vào ở cuối, trùng với hướng thớ cơ xô, nên xô được kéo giãn sâu ở trên và siết mạnh ở dưới. Máy tải đĩa có lực cản nặng dần ở đoạn dưới, đúng chỗ xô khỏe nhất, và hai tay đòn độc lập giúp hai bên lưng phát triển đều.",
+  joints:[["Vai","Khép + duỗi"],["Bả vai","Hạ + khép"],["Khuỷu","Gập"]],
+  cues:["Kéo khuỷu xuống và ra sau, tay cầm về ngang vai","Ưỡn ngực đón tay cầm, siết xô 0.5 giây","Thả lên chậm, để vai được kéo lên cao và xô giãn hết","Thân ngả sau khoảng 10°, đùi chèn chặt dưới đệm gối"],
+  tips:["Chỉnh đệm gối sát đùi để không bị nhấc người khỏi ghế","Bắt đầu mỗi rep bằng hạ vai xuống trước, rồi mới gập khuỷu","Có thể kéo từng tay để cảm nhận xô rõ hơn"],
+  errors:[
+    {t:"Ngả người quá nhiều, giật bằng thân", mk:"lumbar", tempo:[0.6,0,0.9,0.1], B:{R:[-38,0,0]},
+     why:"Bài biến thành chèo, quán tính và lưng dưới làm thay cho xô.",
+     fix:"Giữ thân ngả cố định khoảng 10°, giảm tạ."},
+    {t:"Nửa rep, không duỗi tay ở trên", mk:"elbows", A:{H:[0.33,1.46,0.16]}, M:{H:[0.33,1.28,0.13]},
+     why:"Bỏ mất đoạn xô giãn dài, vùng kích thích tăng cơ mạnh nhất.",
+     fix:"Mỗi rep để tay duỗi gần thẳng và vai được kéo lên cao."}
+  ]}
 
 };
 
 /* loại dụng cụ & bước tăng tạ (kg) */
 const KIND={bench:["bb",2.5],inclineDB:["db",2],ohp:["bb",2.5],cableFly:["cable",2.5],lateral:["db",1],pushdown:["cable",2.5],ohTri:["db",2],
   pullup:["bw",2.5],bbRow:["bb",2.5],latPulldown:["cable",5],seatedRow:["cable",5],facePull:["cable",2.5],ezCurl:["bb",2.5],hammer:["db",1],
-  squat:["bb",2.5],rdl:["bb",5],smithIncline:["smith",2.5],pecDeck:["machine",5],reversePecDeck:["machine",2.5],machinePress:["machine",5],legPress:["machine",10],bulgarian:["db",2],legCurl:["machine",5],legExt:["machine",5],calf:["machine",5],hipThrust:["bb",5]};
+  squat:["bb",2.5],rdl:["bb",5],smithIncline:["smith",2.5],pecDeck:["machine",5],reversePecDeck:["machine",2.5],machinePress:["machine",5],machineRow:["machine",5],machinePulldown:["machine",5],legPress:["machine",10],bulgarian:["db",2],legCurl:["machine",5],legExt:["machine",5],calf:["machine",5],hipThrust:["bb",5]};
 const WLAB={bb:"kg tổng",smith:"kg đĩa",db:"kg / tạ",cable:"kg",machine:"kg",bw:"kg đeo thêm"};
 const R=(id,sets,lo,hi,rest,rir,note)=>({id,sets,lo,hi,rest,rir,note:note||""});
 const PROG = [
   {d:"Thứ 2",s:"T2",ty:"Push",c:"push",fo:"Ngực · vai · tay sau, tạ nặng",min:65,ex:[R("bench",4,6,8,165,2),R("smithIncline",3,6,10,120,2),R("machinePress",3,8,10,90,1),R("pecDeck",3,12,15,60,1),R("lateral",4,12,20,60,1),R("pushdown",3,10,12,60,1)]},
-  {d:"Thứ 3",s:"T3",ty:"Pull",c:"pull",fo:"Lưng · vai sau · tay trước, tạ nặng",min:65,ex:[R("pullup",4,6,10,150,2),R("bbRow",4,6,8,150,2),R("seatedRow",3,10,12,90,2),R("facePull",3,15,20,60,1),R("ezCurl",3,8,10,75,1),R("hammer",2,10,12,60,1)]},
+  {d:"Thứ 3",s:"T3",ty:"Pull",c:"pull",fo:"Lưng · vai sau · tay trước, tạ nặng",min:65,ex:[R("pullup",4,6,10,150,2),R("machineRow",4,6,10,120,2),R("seatedRow",3,10,12,90,2),R("facePull",3,15,20,60,1),R("ezCurl",3,8,10,75,1),R("hammer",2,10,12,60,1)]},
   {d:"Thứ 4",s:"T4",ty:"Leg",c:"leg",fo:"Squat · đùi sau · bắp chân",min:70,ex:[R("squat",4,5,8,180,2),R("rdl",3,8,10,150,2),R("legPress",3,10,12,120,2),R("legCurl",3,10,12,75,1),R("calf",4,10,15,60,1)]},
   {d:"Thứ 5",s:"T5",ty:"Nghỉ",c:"rest",rest:"Đi bộ 8–10k bước, giãn cơ hông và ngực 10 phút, ngủ 7–9 tiếng."},
-  {d:"Thứ 6",s:"T6",ty:"Upper",c:"push",fo:"Thân trên, nhiều rep",min:75,ex:[R("inclineDB",3,10,12,90,1),R("latPulldown",4,10,12,90,1),R("cableFly",3,12,15,60,1),R("seatedRow",3,10,12,90,1),R("lateral",3,15,20,45,1),R("reversePecDeck",3,15,20,45,1),R("ohTri",3,10,12,60,1),R("hammer",2,10,12,60,1)]},
+  {d:"Thứ 6",s:"T6",ty:"Upper",c:"push",fo:"Thân trên, nhiều rep",min:75,ex:[R("inclineDB",3,10,12,90,1),R("machinePulldown",4,8,12,90,1),R("cableFly",3,12,15,60,1),R("seatedRow",3,10,12,90,1),R("lateral",3,15,20,45,1),R("reversePecDeck",3,15,20,45,1),R("ohTri",3,10,12,60,1),R("hammer",2,10,12,60,1)]},
   {d:"Thứ 7",s:"T7",ty:"Lower",c:"leg",fo:"Mông · đùi, nhiều rep",min:60,ex:[R("hipThrust",4,8,10,120,2),R("bulgarian",3,8,10,90,2,"mỗi chân"),R("legExt",3,12,15,75,1),R("legCurl",3,12,15,75,1),R("calf",4,12,15,60,1)]},
   {d:"Chủ nhật",s:"CN",ty:"Nghỉ",c:"rest",rest:"Nghỉ hoàn toàn. Chuẩn bị đồ ăn cho tuần, cân và ghi lại cân nặng trung bình."}
 ];
@@ -1089,6 +1132,19 @@ function buildProps(ex){
       case "flyArms":{ const segs=[1,-1].map(s=>({s,h:cyl(0.02,1,mMetal),v:cyl(0.022,1,mMetal),g:cyl(0.03,0.14,mPad),p:V(s*pr.pivot[0],pr.pivot[1],pr.pivot[2])}));
         box([0,pr.pivot[1]+0.03,pr.pivot[2]],[0.5,0.05,0.08],mFrame);
         updaters.push(()=>{ segs.forEach(o=>{ const W=rig.arm[o.s].W; const top=V(W.x,o.p.y,W.z); span(o.h,o.p,top); span(o.v,top,V(W.x,W.y-0.07,W.z)); o.g.position.copy(W); o.g.rotation.set(0,0,0); }); }); break; }
+      case "isoRow":{ box([0,0.47,0.0],[0.4,0.08,0.38],mPad); box([0,0.23,0.0],[0.08,0.44,0.08],mFrame); box([0,0.02,0.3],[0.8,0.04,1.2],mFrame);
+        const pad=box([0,0.96,0.25],[0.34,0.42,0.08],mPad); pad.rotation.x=12*D2R; box([0,0.48,0.31],[0.07,0.62,0.07],mFrame);
+        box([0,0.1,0.42],[0.44,0.04,0.2],mFrame); [1,-1].forEach(s=>{ box([s*0.3,0.19,0.49],[0.07,0.34,0.07],mFrame); cyl(0.05,0.1,mMetal,propsG,[s*0.3,0.37,0.49],[0,0,Math.PI/2]); }); break; }
+      case "isoPulldown":{ box([0,0.47,0.02],[0.44,0.08,0.4],mPad); box([0,0.23,0.02],[0.08,0.44,0.08],mFrame); box([0,0.02,-0.1],[0.8,0.04,1.2],mFrame);
+        box([0,0.72,0.32],[0.5,0.08,0.1],mPad); box([0,0.58,0.32],[0.05,0.22,0.05],mFrame);
+        box([0,0.74,-0.62],[0.12,1.48,0.12],mFrame); box([0,1.45,-0.6],[0.84,0.08,0.1],mFrame);
+        [1,-1].forEach(s=>{ cyl(0.055,0.1,mMetal,propsG,[s*0.36,1.42,-0.57],[0,0,Math.PI/2]); }); break; }
+      case "plever":{ const segs=[1,-1].map(s=>({s,l:cyl(0.028,1,mFrame),b:cyl(0.028,1,mFrame),h:cyl(0.018,0.16,mMetal),g:cyl(0.03,0.13,mPad),pl:cyl(0.2,0.045,mPlate),p:V(s*pr.pivot[0],pr.pivot[1],pr.pivot[2])}));
+        updaters.push(()=>{ segs.forEach(o=>{ const W=rig.arm[o.s].W; span(o.l,o.p,W); const d=o.p.clone().sub(W).normalize();
+          const E=o.p.clone().addScaledVector(d,pr.back||0.001); span(o.b,o.p,E);
+          const at=pr.back?E:o.p.clone().lerp(W,pr.plateAt||0.3); o.pl.position.copy(at).add(V(o.s*0.08,0,0)); o.pl.rotation.set(0,0,Math.PI/2);
+          o.h.position.copy(at).add(V(o.s*0.06,0,0)); o.h.rotation.set(0,0,Math.PI/2);
+          o.g.position.copy(W); o.g.rotation.set(pr.grip==="v"?0:Math.PI/2,0,pr.grip==="x"?Math.PI/2:0); }); }); break; }
       case "levers":{ const segs=[1,-1].map(s=>({s,l:cyl(0.025,1,mMetal),g:cyl(0.028,0.15,mPad),p:V(s*pr.pivot[0],pr.pivot[1],pr.pivot[2])}));
         updaters.push(()=>{ segs.forEach(o=>{ const W=rig.arm[o.s].W; span(o.l,o.p,W); o.g.position.copy(W); o.g.rotation.set(Math.PI/2,0,0); }); }); break; }
 
@@ -1506,11 +1562,11 @@ function mountDemo(){
   if(demo.id!==ui.open) demo.load(ui.open); else syncDemoUI();
 }
 function syncDemoUI(){
-  const card=document.querySelector(`.exc[data-id="${ui.open}"]`); if(!card||!demo) return; const ex=EX[ui.open], e=demo.err;
+  const card=document.querySelector(`.exc[data-id="${ui.open}"]`); if(!card||!demo) return; const ex=EX[demo.id]||EX[ui.open], e=demo.err;
   card.querySelectorAll("[data-de]").forEach(b=>b.classList.toggle("on",+b.dataset.de===e));
   const o=card.querySelector("[data-ovm]"); if(o){ o.textContent=e>=0?`SAI · LỖI ${e+1}`:"CHUẨN"; o.classList.toggle("bad",e>=0); }
   const p=card.querySelector("[data-dplay]"); if(p) p.textContent=demo.playing?"❚❚":"▶";
-  if(e>=0){ const s=card.querySelector("[data-sub]"); if(s) s.innerHTML=`<b class="e">✕ ${esc(ex.errors[e].t)}.</b> ${esc(ex.errors[e].why)}`; }
+  if(e>=0&&ex.errors[e]){ const s=card.querySelector("[data-sub]"); if(s) s.innerHTML=`<b class="e">✕ ${esc(ex.errors[e].t)}.</b> ${esc(ex.errors[e].why)}`; }
 }
 function onPhase(ph){
   if(!demo||demo.err>=0) return; const card=document.querySelector(`.exc[data-id="${ui.open}"]`); if(!card) return;
